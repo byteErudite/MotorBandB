@@ -10,11 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "role")
-public class Role extends BaseEntity  implements Serializable {
+public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +26,7 @@ public class Role extends BaseEntity  implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private AssignedRole role;
+    private Date addedDate;
 
     public UUID getRoleId() {
         return roleId;
