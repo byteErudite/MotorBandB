@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -27,6 +28,9 @@ public class Role implements Serializable {
     @Enumerated(EnumType.STRING)
     private AssignedRole role;
     private Date addedDate;
+
+    @OneToOne(mappedBy = "role")
+    private UserRole userRole;
 
     public UUID getRoleId() {
         return roleId;

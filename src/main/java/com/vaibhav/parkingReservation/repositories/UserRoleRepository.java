@@ -12,10 +12,10 @@ import java.util.UUID;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, UUID> {
 
-    @Query(value = "select roleId from UserRole where userId = :userId ")
+    @Query(value = "select ur.role.roleId from UserRole ur where ur.user.userId = :userId ")
     public List<UUID> getUserRoleIdbyUserId(UUID userId);
 
-    @Query(value = "select ur from UserRole ur where userId = :userId ")
+    @Query(value = "select ur from UserRole ur where ur.user.userId = :userId ")
     public List<UserRole> getUserRolebyUserId(UUID userId);
 
 }

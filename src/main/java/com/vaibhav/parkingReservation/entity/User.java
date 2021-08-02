@@ -2,41 +2,70 @@ package com.vaibhav.parkingReservation.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "user" , schema = "public")
 public class User implements Serializable {
 
-
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
     private UUID userId;
+
     private String username;
     private String password;
     private boolean isActive;
     private Date addedDate;
     private String email;
+    private String name;
+    private Date dateOfBirth;
+
+    @OneToOne(mappedBy = "user")
+    private ParkingGarage parkingGarage;
+
+    @OneToOne(mappedBy = "user")
+    private Booking booking;
+
+    @OneToOne(mappedBy = "user")
+    private UserRole userRole;
 
     public User() {
     }
 
-    public User(String username, String password, boolean isActive, Date addedDate, String email) {
+    public User(String username, String password, boolean isActive, Date addedDate, String email, String name, String dateOfBirth) {
         this.username = username;
         this.password = password;
         this.isActive = isActive;
         this.addedDate = addedDate;
         this.email = email;
+    }
+
+    public ParkingGarage getParkingGarage() {
+        return parkingGarage;
+    }
+
+    public void setParkingGarage(ParkingGarage parkingGarage) {
+        this.parkingGarage = parkingGarage;
+    }
+
+    public Booking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
     }
 
     public UUID getUserId() {
@@ -87,14 +116,35 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
         sb.append("userId=").append(userId);
         sb.append(", username='").append(username).append('\'');
         sb.append(", password='").append(password).append('\'');
-        sb.append(", addedDate=").append(addedDate);
         sb.append(", isActive=").append(isActive);
+        sb.append(", addedDate=").append(addedDate);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", dateOfBirth=").append(dateOfBirth);
+        sb.append(", parkingGarage=").append(parkingGarage);
+        sb.append(", booking=").append(booking);
         sb.append('}');
         return sb.toString();
     }

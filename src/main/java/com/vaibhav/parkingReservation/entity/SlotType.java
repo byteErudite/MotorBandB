@@ -5,8 +5,13 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +29,25 @@ public class SlotType extends BaseEntity implements Serializable {
     private float dayRate;
     private float monthRate;
     private String dimensionUnit;
+
+    @OneToMany(mappedBy="slotType")
+    private Set<Slot> slots;
+
+    @ManyToOne
+    @JoinColumn(name = "parkingGarageId", nullable = false)
+    private ParkingGarage parkingGarage;
+
+
+    public SlotType(UUID slotTypeId, int length, int breadth, String typeName, float hourRate, float dayRate, float monthRate, String dimensionUnit) {
+        this.slotTypeId = slotTypeId;
+        this.length = length;
+        this.breadth = breadth;
+        this.typeName = typeName;
+        this.hourRate = hourRate;
+        this.dayRate = dayRate;
+        this.monthRate = monthRate;
+        this.dimensionUnit = dimensionUnit;
+    }
 
     public UUID getSlotTypeId() {
         return slotTypeId;
@@ -89,6 +113,22 @@ public class SlotType extends BaseEntity implements Serializable {
         this.dimensionUnit = dimensionUnit;
     }
 
+    public Set<Slot> getSlots() {
+        return slots;
+    }
+
+    public void setSlots(Set<Slot> slots) {
+        this.slots = slots;
+    }
+
+    public ParkingGarage getParkingGarage() {
+        return parkingGarage;
+    }
+
+    public void setParkingGarage(ParkingGarage parkingGarage) {
+        this.parkingGarage = parkingGarage;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("SlotType{");
@@ -100,6 +140,8 @@ public class SlotType extends BaseEntity implements Serializable {
         sb.append(", dayRate=").append(dayRate);
         sb.append(", monthRate=").append(monthRate);
         sb.append(", dimensionUnit='").append(dimensionUnit).append('\'');
+        sb.append(", slots=").append(slots);
+        sb.append(", parkingGarage=").append(parkingGarage);
         sb.append('}');
         return sb.toString();
     }

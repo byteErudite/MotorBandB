@@ -9,12 +9,16 @@ import com.vaibhav.parkingReservation.repositories.RoleRepository;
 import com.vaibhav.parkingReservation.repositories.UserRepository;
 import com.vaibhav.parkingReservation.repositories.UserRoleRepository;
 import com.vaibhav.parkingReservation.services.UserService;
+import com.vaibhav.parkingReservation.utilities.CommonUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,11 +36,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String registerUser(AuthenticationRequest registrationRequest, AssignedRole role) throws Exception {
         validateRegistrationRequest(registrationRequest);
-        User user = null;
         try {
-            user = userRepository.save(new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, new Date(System.currentTimeMillis()), registrationRequest.getEmail()));
+            User user = userRepository.save(populateUserFromRegistrationRequest(registrationRequest));
             Role dbRole = roleRepository.findByRoleName(role);
-            userRoleRepository.save(new UserRole(dbRole.getRoleId(), user.getUserId()));
+            userRoleRepository.save(new UserRole(user, dbRole));
             return "success";
         } catch (Exception e) {
             throw new Exception("User creation failed please try again");
@@ -44,10 +47,51 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateRegistrationRequest(AuthenticationRequest registrationRequest) throws Exception {
-        if (registrationRequest.getUsername().equals(null) || registrationRequest.getPassword().equals(null)) {
-            throw new Exception("username or password cannot be empty or null");
-        }
+//        if (CommonUtilities.isEmpty(registrationRequest.getUsername()) || CommonUtilities.isEmpty(registrationRequest.getPassword())) {
+//            throw new Exception("Invalid username or password");
+//        }
+//
+//        if (CommonUtilities.isEmpty(registrationRequest.getName())) {
+//            throw new Exception("Name cannot be empty");
+//        }
+        checkIfUsernameOrEmailExists(registrationRequest);
+
     }
 
+    private void checkIfUsernameOrEmailExists(AuthenticationRequest registrationRequest) throws Exception {
+        List<User> existingDuplicateUsers = userRepository.findByUsernameOrEmail(registrationRequest.getUsername(), registrationRequest.getEmail());
+        if (!existingDuplicateUsers.isEmpty()) {
+            boolean usernameExists = false;
+            boolean emailExists = false ;
+            for (User user : existingDuplicateUsers) {
+                if (user.getUsername().equals(registrationRequest.getUsername())) {
+                    usernameExists = true;
+                }
+                if (user.getEmail().equals(registrationRequest.getEmail())) {
+                    emailExists = true;
+                }
+            }
+            String duplicateException = null;
+            if (usernameExists && emailExists) {
+                duplicateException = "email and username already in use";
+            } else if (usernameExists) {
+                duplicateException = "username already in use";
+            } else if (emailExists) {
+                duplicateException = "email already in use";
+            }
 
+            if (Objects.nonNull(duplicateException)) {
+                throw new Exception(duplicateException);
+            }
+        }
+
+    }
+
+    private User populateUserFromRegistrationRequest(AuthenticationRequest registrationRequest) throws Exception {
+        Date dateOfBirth = CommonUtilities.getDateFromString(registrationRequest.getDateOfBirth());
+        if (Objects.isNull(dateOfBirth)) {
+            throw new Exception("Please provide date in dd/mm/yyyy format");
+        }
+        return new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, (java.sql.Date) new Date(System.currentTimeMillis()), registrationRequest.getEmail(), registrationRequest.getName(), registrationRequest.getEmail());
+    }
 }

@@ -2,9 +2,12 @@ package com.vaibhav.parkingReservation.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.UUID;
@@ -19,15 +22,21 @@ public class UserRole implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
     private UUID userRoleId;
-    private UUID userId;
-    private UUID roleId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "roleId")
+    private Role role;
 
     public UserRole() {
     }
 
-    public UserRole(UUID userId, UUID roleId) {
-        this.userId = userId;
-        this.roleId = roleId;
+    public UserRole(User user, Role role) {
+        this.user = user;
+        this.role = role;
     }
 
     public UUID getUserRoleId() {
@@ -38,28 +47,28 @@ public class UserRole implements Serializable {
         this.userRoleId = userRoleId;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public UUID getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(UUID roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserRole{");
         sb.append("userRoleId=").append(userRoleId);
-        sb.append(", userId=").append(userId);
-        sb.append(", roleId=").append(roleId);
+        sb.append(", user=").append(user);
+        sb.append(", role=").append(role);
         sb.append('}');
         return sb.toString();
     }

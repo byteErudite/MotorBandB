@@ -4,9 +4,12 @@ import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -19,11 +22,19 @@ public class Booking extends BaseEntity implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
     private UUID bookingId;
+
     private Timestamp startDate;
     private Timestamp endDate;
     private PaymentStatus paymentStatus;
     private BookingStatus bookingStatus;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "slotId")
     private Slot slot;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
+    private User user;
 
     public Booking() {
     }
@@ -76,6 +87,14 @@ public class Booking extends BaseEntity implements Serializable {
         this.slot = slot;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Booking{");
@@ -85,6 +104,7 @@ public class Booking extends BaseEntity implements Serializable {
         sb.append(", paymentStatus=").append(paymentStatus);
         sb.append(", bookingStatus=").append(bookingStatus);
         sb.append(", slot=").append(slot);
+        sb.append(", user=").append(user);
         sb.append('}');
         return sb.toString();
     }
