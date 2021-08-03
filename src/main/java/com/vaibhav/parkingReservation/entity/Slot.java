@@ -25,12 +25,15 @@ public class Slot extends BaseEntity implements Serializable {
     @JoinColumn(name="slotTypeId", nullable=false)
     private SlotType slotType;
 
-    private String nearestExit;
+    private Float nearestExit;
+    private String nearestExitName;
     private String identifier1;//floor
     private String identifier2;//block
     private String identifier3;//row
-    private String indetifier4;//column
-    private boolean isAvailable;
+    private String identifier4;//column
+    private boolean isFunctional;
+    private boolean isReserved;
+
 
     @OneToOne(mappedBy = "slot")
     private Booking booking;
@@ -40,6 +43,31 @@ public class Slot extends BaseEntity implements Serializable {
     private ParkingGarage parkingGarage;
 
     public Slot() {
+    }
+
+
+    public String getNearestExitName() {
+        return nearestExitName;
+    }
+
+    public void setNearestExitName(String nearestExitName) {
+        this.nearestExitName = nearestExitName;
+    }
+
+    public boolean isReserved() {
+        return isReserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        isReserved = reserved;
+    }
+
+    public Booking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
     }
 
     public UUID getSlotId() {
@@ -58,11 +86,11 @@ public class Slot extends BaseEntity implements Serializable {
         this.slotType = slotType;
     }
 
-    public String getNearestExit() {
+    public Float getNearestExit() {
         return nearestExit;
     }
 
-    public void setNearestExit(String nearestExit) {
+    public void setNearestExit(Float nearestExit) {
         this.nearestExit = nearestExit;
     }
 
@@ -82,12 +110,12 @@ public class Slot extends BaseEntity implements Serializable {
         this.identifier2 = identifier2;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isFunctional() {
+        return isFunctional;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setFunctional(boolean functional) {
+        isFunctional = functional;
     }
 
     public String getIdentifier3() {
@@ -98,13 +126,14 @@ public class Slot extends BaseEntity implements Serializable {
         this.identifier3 = identifier3;
     }
 
-    public String getIndetifier4() {
-        return indetifier4;
+    public String getIdentifier4() {
+        return identifier4;
     }
 
-    public void setIndetifier4(String indetifier4) {
-        this.indetifier4 = indetifier4;
+    public void setIdentifier4(String identifier4) {
+        this.identifier4 = identifier4;
     }
+
 
     public ParkingGarage getParkingGarage() {
         return parkingGarage;
@@ -120,9 +149,15 @@ public class Slot extends BaseEntity implements Serializable {
         sb.append("slotId=").append(slotId);
         sb.append(", slotType=").append(slotType);
         sb.append(", nearestExit='").append(nearestExit).append('\'');
+        sb.append(", nearestExitName='").append(nearestExitName).append('\'');
         sb.append(", identifier1='").append(identifier1).append('\'');
-        sb.append(", indetifier2='").append(identifier2).append('\'');
-        sb.append(", isAvailable=").append(isAvailable);
+        sb.append(", identifier2='").append(identifier2).append('\'');
+        sb.append(", identifier3='").append(identifier3).append('\'');
+        sb.append(", indetifier4='").append(identifier4).append('\'');
+        sb.append(", isAvailable=").append(isFunctional);
+        sb.append(", isReserved=").append(isReserved);
+        sb.append(", booking=").append(booking);
+        sb.append(", parkingGarage=").append(parkingGarage);
         sb.append('}');
         return sb.toString();
     }

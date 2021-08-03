@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,10 +28,30 @@ public class Role implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private AssignedRole role;
-    private Date addedDate;
+    private Timestamp addedDate;
 
     @OneToOne(mappedBy = "role")
     private UserRole userRole;
+
+
+    public Role() {
+    }
+
+    public Timestamp getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Timestamp addedDate) {
+        this.addedDate = addedDate;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 
     public UUID getRoleId() {
         return roleId;

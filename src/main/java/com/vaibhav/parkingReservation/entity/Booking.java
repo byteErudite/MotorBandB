@@ -22,7 +22,6 @@ public class Booking extends BaseEntity implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
     private UUID bookingId;
-
     private Timestamp startDate;
     private Timestamp endDate;
     private PaymentStatus paymentStatus;

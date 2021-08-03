@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class AuthenticationController {
 
@@ -49,12 +51,12 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/registerUser")
-     public ResponseEntity<String> registerUser(@RequestBody AuthenticationRequest registrationRequest) throws Exception {
+     public ResponseEntity<String> registerUser(@RequestBody @Valid AuthenticationRequest registrationRequest) throws Exception {
          return new ResponseEntity<>(userService.registerUser(registrationRequest, AssignedRole.USER), HttpStatus.OK);
      }
 
     @PostMapping(value = "/registerAdmin")
-    public ResponseEntity<String> registerAdmin(@RequestBody AuthenticationRequest registrationRequest) throws Exception {
+    public ResponseEntity<String> registerAdmin(@RequestBody @Valid AuthenticationRequest registrationRequest) throws Exception {
         return new ResponseEntity<>(userService.registerUser(registrationRequest, AssignedRole.ADMIN), HttpStatus.OK);
     }
 }

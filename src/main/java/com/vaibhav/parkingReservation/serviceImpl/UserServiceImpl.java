@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 
 @Service
@@ -47,15 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateRegistrationRequest(AuthenticationRequest registrationRequest) throws Exception {
-//        if (CommonUtilities.isEmpty(registrationRequest.getUsername()) || CommonUtilities.isEmpty(registrationRequest.getPassword())) {
-//            throw new Exception("Invalid username or password");
-//        }
-//
-//        if (CommonUtilities.isEmpty(registrationRequest.getName())) {
-//            throw new Exception("Name cannot be empty");
-//        }
         checkIfUsernameOrEmailExists(registrationRequest);
-
     }
 
     private void checkIfUsernameOrEmailExists(AuthenticationRequest registrationRequest) throws Exception {
@@ -92,6 +84,6 @@ public class UserServiceImpl implements UserService {
         if (Objects.isNull(dateOfBirth)) {
             throw new Exception("Please provide date in dd/mm/yyyy format");
         }
-        return new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, (java.sql.Date) new Date(System.currentTimeMillis()), registrationRequest.getEmail(), registrationRequest.getName(), registrationRequest.getEmail());
+        return new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, new Timestamp(System.currentTimeMillis()), registrationRequest.getEmail(), registrationRequest.getName(), dateOfBirth);
     }
 }

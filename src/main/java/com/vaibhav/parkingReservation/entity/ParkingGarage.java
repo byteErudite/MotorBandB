@@ -39,6 +39,9 @@ public class ParkingGarage {
     @OneToMany(mappedBy="parkingGarage")
     private Set<SlotType> slotTypes;
 
+    public ParkingGarage() {
+    }
+
     public UUID getParkingGarageId() {
         return parkingGarageId;
     }

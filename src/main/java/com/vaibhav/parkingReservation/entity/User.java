@@ -2,17 +2,14 @@ package com.vaibhav.parkingReservation.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +24,7 @@ public class User implements Serializable {
     private String username;
     private String password;
     private boolean isActive;
-    private Date addedDate;
+    private Timestamp addedDate;
     private String email;
     private String name;
     private Date dateOfBirth;
@@ -44,12 +41,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String password, boolean isActive, Date addedDate, String email, String name, String dateOfBirth) {
+    public User(String username, String password, boolean isActive, Timestamp addedDate, String email, String name, Date dateOfBirth) {
         this.username = username;
         this.password = password;
         this.isActive = isActive;
         this.addedDate = addedDate;
         this.email = email;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public ParkingGarage getParkingGarage() {
@@ -104,7 +103,7 @@ public class User implements Serializable {
         return addedDate;
     }
 
-    public void setAddedDate(Date addedDate) {
+    public void setAddedDate(Timestamp addedDate) {
         this.addedDate = addedDate;
     }
 

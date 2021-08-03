@@ -1,6 +1,7 @@
 package com.vaibhav.parkingReservation.utilities;
 
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

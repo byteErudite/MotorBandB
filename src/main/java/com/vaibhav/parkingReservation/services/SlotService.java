@@ -1,10 +1,16 @@
 package com.vaibhav.parkingReservation.services;
 
+import com.vaibhav.parkingReservation.DTOs.SlotDTO;
+import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.entity.Slot;
+import com.vaibhav.parkingReservation.entity.SlotType;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SlotService {
 
-    public List<Slot> getAllSlots();
+    List<Slot> getAllSlots();
+    Map<String,Object> addSlotTypes(List<SlotTypeDTO> slotTypes);
+    Map<String,Object> addSlots(List<SlotDTO> slots);
 }

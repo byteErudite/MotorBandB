@@ -1,26 +1,12 @@
-package com.vaibhav.parkingReservation.entity;
+package com.vaibhav.parkingReservation.DTOs;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vaibhav.parkingReservation.entity.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
 
-@Entity
-@Table(name = "slot_type")
-public class SlotType extends BaseEntity implements Serializable {
-
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @GeneratedValue(generator = "uuid")
-    private UUID slotTypeId;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class SlotTypeDTO extends BaseEntity implements Serializable {
     private int length;
     private int breadth;
     private String typeName;
@@ -28,18 +14,12 @@ public class SlotType extends BaseEntity implements Serializable {
     private float dayRate;
     private float monthRate;
     private String dimensionUnit;
+    private String parkingGarageId;
 
-    @OneToMany(mappedBy="slotType")
-    private Set<Slot> slots;
-
-    @ManyToOne
-    @JoinColumn(name = "parkingGarageId", nullable = false)
-    private ParkingGarage parkingGarage;
-
-    public SlotType() {
+    public SlotTypeDTO() {
     }
 
-    public SlotType(int length, int breadth, String typeName, float hourRate, float dayRate, float monthRate, String dimensionUnit) {
+    public SlotTypeDTO(int length, int breadth, String typeName, float hourRate, float dayRate, float monthRate, String dimensionUnit, String parkingGarageId) {
         this.length = length;
         this.breadth = breadth;
         this.typeName = typeName;
@@ -47,16 +27,7 @@ public class SlotType extends BaseEntity implements Serializable {
         this.dayRate = dayRate;
         this.monthRate = monthRate;
         this.dimensionUnit = dimensionUnit;
-    }
-
-
-
-    public UUID getSlotTypeId() {
-        return slotTypeId;
-    }
-
-    public void setSlotTypeId(UUID slotTypeId) {
-        this.slotTypeId = slotTypeId;
+        this.parkingGarageId = parkingGarageId;
     }
 
     public int getLength() {
@@ -115,35 +86,25 @@ public class SlotType extends BaseEntity implements Serializable {
         this.dimensionUnit = dimensionUnit;
     }
 
-    public Set<Slot> getSlots() {
-        return slots;
+    public String getParkingGarageId() {
+        return parkingGarageId;
     }
 
-    public void setSlots(Set<Slot> slots) {
-        this.slots = slots;
-    }
-
-    public ParkingGarage getParkingGarage() {
-        return parkingGarage;
-    }
-
-    public void setParkingGarage(ParkingGarage parkingGarage) {
-        this.parkingGarage = parkingGarage;
+    public void setParkingGarageId(String parkingGarageId) {
+        this.parkingGarageId = parkingGarageId;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("SlotType{");
-        sb.append("slotTypeId=").append(slotTypeId);
-        sb.append(", length=").append(length);
+        final StringBuilder sb = new StringBuilder("SlotTypeDTO{");
+        sb.append("length=").append(length);
         sb.append(", breadth=").append(breadth);
         sb.append(", typeName='").append(typeName).append('\'');
         sb.append(", hourRate=").append(hourRate);
         sb.append(", dayRate=").append(dayRate);
         sb.append(", monthRate=").append(monthRate);
         sb.append(", dimensionUnit='").append(dimensionUnit).append('\'');
-        sb.append(", slots=").append(slots);
-        sb.append(", parkingGarage=").append(parkingGarage);
+        sb.append(", parkingGarageId='").append(parkingGarageId).append('\'');
         sb.append('}');
         return sb.toString();
     }

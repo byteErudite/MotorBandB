@@ -1,22 +1,7 @@
-package com.vaibhav.parkingReservation.entity;
+package com.vaibhav.parkingReservation.DTOs;
 
-import org.hibernate.annotations.GenericGenerator;
+public class AddressDTO {
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import java.util.UUID;
-
-@Entity
-@Table(name = "address")
-public class Address {
-
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @GeneratedValue(generator = "uuid")
-    private UUID addressId;
     private String addressLine1;
     private String addressLine2;
     private String city;
@@ -25,18 +10,7 @@ public class Address {
     private String pinCode;
     private boolean isPersonalAddress;
 
-    public Address() {
-    }
-
-    @OneToOne(mappedBy = "address")
-    private ParkingGarage parkingGarage;
-
-    public UUID getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(UUID addressId) {
-        this.addressId = addressId;
+    public AddressDTO() {
     }
 
     public String getAddressLine1() {
@@ -95,26 +69,16 @@ public class Address {
         isPersonalAddress = personalAddress;
     }
 
-    public ParkingGarage getParkingGarage() {
-        return parkingGarage;
-    }
-
-    public void setParkingGarage(ParkingGarage parkingGarage) {
-        this.parkingGarage = parkingGarage;
-    }
-
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Address{");
-        sb.append("addressId=").append(addressId);
-        sb.append(", addressLine1='").append(addressLine1).append('\'');
+        final StringBuilder sb = new StringBuilder("AddressDTO{");
+        sb.append("addressLine1='").append(addressLine1).append('\'');
         sb.append(", addressLine2='").append(addressLine2).append('\'');
         sb.append(", city='").append(city).append('\'');
         sb.append(", state='").append(state).append('\'');
         sb.append(", country='").append(country).append('\'');
         sb.append(", pinCode='").append(pinCode).append('\'');
         sb.append(", isPersonalAddress=").append(isPersonalAddress);
-        sb.append(", parkingGarage=").append(parkingGarage);
         sb.append('}');
         return sb.toString();
     }
