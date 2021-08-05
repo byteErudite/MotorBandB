@@ -2,11 +2,16 @@ package com.vaibhav.parkingReservation.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Date;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SlotDTO {
 
     private Float nearestExit;
     private String nearestExitName;
+    private String slotCode;
+    private String startDate;
+    private String endDate;
     private String identifier1;//floor
     private String identifier2;//block
     private String identifier3;//row
@@ -17,6 +22,30 @@ public class SlotDTO {
     private boolean isReserved;
 
     public SlotDTO() {
+    }
+
+    public String getSlotCode() {
+        return slotCode;
+    }
+
+    public void setSlotCode(String slotCode) {
+        this.slotCode = slotCode;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public Float getNearestExit() {

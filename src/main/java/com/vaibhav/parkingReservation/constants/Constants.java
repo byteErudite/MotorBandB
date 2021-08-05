@@ -6,4 +6,5 @@ public class Constants {
         super();
     }
     public static final String EMPTY_STRING = "";
+    public static final String HYPHEN = "-";
 }

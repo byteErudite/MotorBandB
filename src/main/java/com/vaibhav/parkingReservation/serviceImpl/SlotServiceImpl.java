@@ -17,12 +17,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.vaibhav.parkingReservation.constants.Constants.HYPHEN;
 
 @Service
 public class SlotServiceImpl implements SlotService {
@@ -45,6 +48,7 @@ public class SlotServiceImpl implements SlotService {
     public List<Slot> getAllSlots() {
         return slotRepository.findAll();
     }
+
 
     @Transactional
     public Map<String,Object> addSlotTypes(List<SlotTypeDTO> slotTypes) {
@@ -83,8 +87,20 @@ public class SlotServiceImpl implements SlotService {
             throw new Exception("Parking garage id or slotType id cannot be null or empty");
         }
         Slot slot = slotMapper.slotDTOToSlot(slotDTO);
+        setTimeAndCode(slot, slotDTO);
         setGarageAndSlotType(slot, slotDTO);
         return slotRepository.save(slot);
+    }
+
+    private void setTimeAndCode(Slot slot, SlotDTO slotDTO) {
+        Date startDate = CommonUtilities.getDateFromString(slotDTO.getStartDate());
+        if (Objects.isNull(startDate) || startDate.before(new Date(System.currentTimeMillis()))) {
+            slot.setStartDate(new Date(System.currentTimeMillis()));
+        }
+        slot.setEndDate(CommonUtilities.getDateFromString("01/01/2050"));
+        String slotCode = UUID.randomUUID().toString().replace("-","") + HYPHEN + 0;
+        slot.setSlotCode(slotCode);
+        slotDTO.setSlotCode(slotDTO.getIdentifier1().substring(0,5) + slotDTO.getIdentifier2().substring(0,5) + slotDTO.getIdentifier3().substring(0,5));
     }
 
     private void setGarageAndSlotType(Slot slot, SlotDTO slotDTO) throws Exception {
@@ -97,6 +113,7 @@ public class SlotServiceImpl implements SlotService {
         if (!slotType.isPresent()) {
             throw new Exception("Invalid slot type Id");
         }
+        slot.setFunctional(true);
         slot.setParkingGarage(parkingGarage.get());
         slot.setSlotType(slotType.get());
     }

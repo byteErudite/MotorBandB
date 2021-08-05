@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 @Table(name = "slot")
@@ -27,6 +28,9 @@ public class Slot extends BaseEntity implements Serializable {
 
     private Float nearestExit;
     private String nearestExitName;
+    private String slotCode;
+    private Date startDate;
+    private Date endDate;
     private String identifier1;//floor
     private String identifier2;//block
     private String identifier3;//row
@@ -45,6 +49,51 @@ public class Slot extends BaseEntity implements Serializable {
     public Slot() {
     }
 
+    public String getSlotCode() {
+        return slotCode;
+    }
+
+    public void setSlotCode(String slotCode) {
+        this.slotCode = slotCode;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Slot copyObject() {
+        return new Slot(this.slotType, this.nearestExit, this.nearestExitName, this.slotCode, this.startDate, this.endDate, this.identifier1, this.identifier2, this.identifier3, this.identifier4, this.isFunctional, this.isReserved, this.booking, this.parkingGarage);
+    }
+
+    public Slot(SlotType slotType, Float nearestExit, String nearestExitName, String slotCode, Date startDate, Date endDate, String identifier1, String identifier2, String identifier3, String identifier4, boolean isFunctional, boolean isReserved, Booking booking, ParkingGarage parkingGarage) {
+        this.slotId = slotId;
+        this.slotType = slotType;
+        this.nearestExit = nearestExit;
+        this.nearestExitName = nearestExitName;
+        this.slotCode = slotCode;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.identifier1 = identifier1;
+        this.identifier2 = identifier2;
+        this.identifier3 = identifier3;
+        this.identifier4 = identifier4;
+        this.isFunctional = isFunctional;
+        this.isReserved = isReserved;
+        this.booking = booking;
+        this.parkingGarage = parkingGarage;
+    }
 
     public String getNearestExitName() {
         return nearestExitName;
