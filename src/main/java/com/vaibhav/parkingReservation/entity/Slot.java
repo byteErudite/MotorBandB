@@ -1,8 +1,11 @@
 package com.vaibhav.parkingReservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -22,7 +25,7 @@ public class Slot extends BaseEntity implements Serializable {
     @GeneratedValue(generator = "uuid")
     private UUID slotId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="slotTypeId", nullable=false)
     private SlotType slotType;
 
@@ -111,6 +114,7 @@ public class Slot extends BaseEntity implements Serializable {
         isReserved = reserved;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Booking getBooking() {
         return booking;
     }
@@ -127,6 +131,8 @@ public class Slot extends BaseEntity implements Serializable {
         this.slotId = slotId;
     }
 
+    @ManyToOne(cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public SlotType getSlotType() {
         return slotType;
     }

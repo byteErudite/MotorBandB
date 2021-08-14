@@ -1,8 +1,11 @@
 package com.vaibhav.parkingReservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -29,6 +32,7 @@ public class Address {
     }
 
     @OneToOne(mappedBy = "address")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private ParkingGarage parkingGarage;
 
     public UUID getAddressId() {
@@ -95,6 +99,8 @@ public class Address {
         isPersonalAddress = personalAddress;
     }
 
+    @OneToOne(cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public ParkingGarage getParkingGarage() {
         return parkingGarage;
     }

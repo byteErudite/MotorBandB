@@ -1,5 +1,6 @@
 package com.vaibhav.parkingReservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
 import org.hibernate.annotations.GenericGenerator;
@@ -78,6 +79,7 @@ public class Booking extends BaseEntity implements Serializable {
         this.bookingStatus = bookingStatus;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Slot getSlot() {
         return slot;
     }
@@ -85,6 +87,7 @@ public class Booking extends BaseEntity implements Serializable {
     public void setSlot(Slot slot) {
         this.slot = slot;
     }
+
 
     public User getUser() {
         return user;

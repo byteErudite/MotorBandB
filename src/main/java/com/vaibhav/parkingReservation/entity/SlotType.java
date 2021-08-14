@@ -1,5 +1,6 @@
 package com.vaibhav.parkingReservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ public class SlotType extends BaseEntity implements Serializable {
     private String dimensionUnit;
 
     @OneToMany(mappedBy="slotType")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Slot> slots;
 
     @ManyToOne

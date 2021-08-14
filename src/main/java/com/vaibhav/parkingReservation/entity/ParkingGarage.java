@@ -1,5 +1,6 @@
 package com.vaibhav.parkingReservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -74,6 +75,7 @@ public class ParkingGarage {
         isOperational = operational;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public User getUser() {
         return user;
     }
@@ -82,6 +84,7 @@ public class ParkingGarage {
         this.user = user;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<Slot> getSlots() {
         return slots;
     }
@@ -90,6 +93,7 @@ public class ParkingGarage {
         this.slots = slots;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<SlotType> getSlotTypes() {
         return slotTypes;
     }
