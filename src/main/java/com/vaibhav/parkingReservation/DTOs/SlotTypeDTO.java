@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vaibhav.parkingReservation.entity.BaseEntity;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SlotTypeDTO extends BaseEntity implements Serializable {
+    private UUID slotTypeId;
     private int length;
     private int breadth;
     private String typeName;
@@ -14,12 +16,13 @@ public class SlotTypeDTO extends BaseEntity implements Serializable {
     private float dayRate;
     private float monthRate;
     private String dimensionUnit;
-    private String parkingGarageId;
+    private UUID parkingGarageId;
 
     public SlotTypeDTO() {
     }
 
-    public SlotTypeDTO(int length, int breadth, String typeName, float hourRate, float dayRate, float monthRate, String dimensionUnit, String parkingGarageId) {
+    public SlotTypeDTO(UUID slotTypeId, int length, int breadth, String typeName, float hourRate, float dayRate, float monthRate, String dimensionUnit, UUID parkingGarageId) {
+        this.slotTypeId = slotTypeId;
         this.length = length;
         this.breadth = breadth;
         this.typeName = typeName;
@@ -86,17 +89,26 @@ public class SlotTypeDTO extends BaseEntity implements Serializable {
         this.dimensionUnit = dimensionUnit;
     }
 
-    public String getParkingGarageId() {
+    public UUID getParkingGarageId() {
         return parkingGarageId;
     }
 
-    public void setParkingGarageId(String parkingGarageId) {
+    public void setParkingGarageId(UUID parkingGarageId) {
         this.parkingGarageId = parkingGarageId;
+    }
+
+    public UUID getSlotTypeId() {
+        return slotTypeId;
+    }
+
+    public void setSlotTypeId(UUID slotTypeId) {
+        this.slotTypeId = slotTypeId;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("SlotTypeDTO{");
+        sb.append("slotTypeId=").append(slotTypeId);
         sb.append("length=").append(length);
         sb.append(", breadth=").append(breadth);
         sb.append(", typeName='").append(typeName).append('\'');

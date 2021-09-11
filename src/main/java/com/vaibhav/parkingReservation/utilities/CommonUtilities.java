@@ -1,10 +1,14 @@
 package com.vaibhav.parkingReservation.utilities;
 
 
+import com.sun.istack.Nullable;
+import org.springframework.util.CollectionUtils;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
@@ -32,5 +36,9 @@ public class CommonUtilities {
 
     public static boolean isEmpty(String string) {
         return Objects.isNull(string) || EMPTY_STRING.equals(string);
+    }
+
+    public static boolean isNotEmpty(@Nullable Collection<?> collectionObject) {
+        return !CollectionUtils.isEmpty(collectionObject);
     }
 }

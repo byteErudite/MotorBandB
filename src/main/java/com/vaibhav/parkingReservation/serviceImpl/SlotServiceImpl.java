@@ -2,6 +2,8 @@ package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
+import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
+import com.vaibhav.parkingReservation.customRepositories.SlotCustomRepository;
 import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.SlotType;
@@ -10,6 +12,7 @@ import com.vaibhav.parkingReservation.mapper.SlotTypeMapper;
 import com.vaibhav.parkingReservation.repositories.ParkingGarageRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
 import com.vaibhav.parkingReservation.repositories.SlotTypeRepository;
+import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 import com.vaibhav.parkingReservation.services.SlotService;
 import com.vaibhav.parkingReservation.utilities.CommonUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,9 @@ public class SlotServiceImpl implements SlotService {
     SlotTypeRepository slotTypeRepository;
 
     @Autowired
+    SlotCustomRepository slotCustomRepository;
+
+    @Autowired
     ParkingGarageRepository parkingGarageRepository;
 
     @Autowired
@@ -65,6 +71,10 @@ public class SlotServiceImpl implements SlotService {
             processedSlotTypes.put("Success","all slot types");
         }
         return processedSlotTypes;
+    }
+
+    public SlotTypeSearchResponse getAllSlotTypes(SlotTypeSearchRequest slotTypeSearchRequest, int pageNumber, int pageSize) {
+        return slotCustomRepository.getslotTypes(slotTypeSearchRequest, pageNumber, pageSize);
     }
 
     @Override
@@ -122,7 +132,7 @@ public class SlotServiceImpl implements SlotService {
         if (Objects.isNull(slotTypeDTO.getParkingGarageId())) {
             throw new Exception("parkingGarageId missing in request");
         }
-        Optional<ParkingGarage> parkingGarage = parkingGarageRepository.findById(UUID.fromString(slotTypeDTO.getParkingGarageId()));
+        Optional<ParkingGarage> parkingGarage = parkingGarageRepository.findById(slotTypeDTO.getParkingGarageId());
         if (!parkingGarage.isPresent()) {
             throw new Exception("Invalid parkingGarageId");
         }

@@ -31,7 +31,6 @@ public class SlotType extends BaseEntity implements Serializable {
     private String dimensionUnit;
 
     @OneToMany(mappedBy="slotType")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Slot> slots;
 
     @ManyToOne
@@ -117,6 +116,7 @@ public class SlotType extends BaseEntity implements Serializable {
         this.dimensionUnit = dimensionUnit;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<Slot> getSlots() {
         return slots;
     }
@@ -125,6 +125,7 @@ public class SlotType extends BaseEntity implements Serializable {
         this.slots = slots;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public ParkingGarage getParkingGarage() {
         return parkingGarage;
     }

@@ -25,7 +25,7 @@ public class Slot extends BaseEntity implements Serializable {
     @GeneratedValue(generator = "uuid")
     private UUID slotId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="slotTypeId", nullable=false)
     private SlotType slotType;
 
@@ -131,8 +131,6 @@ public class Slot extends BaseEntity implements Serializable {
         this.slotId = slotId;
     }
 
-    @ManyToOne(cascade= CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public SlotType getSlotType() {
         return slotType;
     }
