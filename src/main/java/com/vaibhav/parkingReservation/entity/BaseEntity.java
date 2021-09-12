@@ -44,6 +44,26 @@ public class BaseEntity {
         super();
     }
 
+    public void setCreatedByUser(String createdByUser) {
+        this.createdByUser = createdByUser;
+    }
+
+    public void setCreationTime(Instant creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public void setModificationTime(Instant modificationTime) {
+        this.modificationTime = modificationTime;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     public String getCreatedByUser() {
         return createdByUser;
     }

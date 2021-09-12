@@ -1,5 +1,6 @@
 package com.vaibhav.parkingReservation.controllers;
 
+import com.vaibhav.parkingReservation.DTOs.BookingDTO;
 import com.vaibhav.parkingReservation.DTOs.BookingRequest;
 import com.vaibhav.parkingReservation.DTOs.ParkingGarageDTO;
 import com.vaibhav.parkingReservation.entity.Booking;
@@ -21,7 +22,7 @@ public class BookingController {
     BookingService bookingService;
 
     @PostMapping(path = "/create")
-    public ResponseEntity<Booking> bookSlot(@RequestBody BookingRequest bookingRequest) throws Exception {
+    public ResponseEntity<BookingDTO> bookSlot(@RequestBody BookingRequest bookingRequest) throws Exception {
         return new ResponseEntity<>(bookingService.createBooking(bookingRequest), HttpStatus.OK);
     }
 }

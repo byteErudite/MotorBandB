@@ -64,6 +64,7 @@ public class User implements Serializable {
         this.parkingGarage = parkingGarage;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Booking getBooking() {
         return booking;
     }

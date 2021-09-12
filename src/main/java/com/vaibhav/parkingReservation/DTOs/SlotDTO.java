@@ -3,10 +3,12 @@ package com.vaibhav.parkingReservation.DTOs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Date;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SlotDTO {
 
+    private String slotId;
     private Float nearestExit;
     private String nearestExitName;
     private String slotCode;
@@ -21,7 +23,48 @@ public class SlotDTO {
     private String parkingGarageId;
     private boolean isReserved;
 
+    public SlotDTO(UUID slotId, Float nearestExit, String nearestExitName, String slotCode, Date startDate, Date endDate, String identifier1, String identifier2, String identifier3, String identifier4, boolean isFunctional, UUID slotTypeId, UUID parkingGarageId, boolean isReserved) {
+        this.slotId = slotId.toString();
+        this.nearestExit = nearestExit;
+        this.nearestExitName = nearestExitName;
+        this.slotCode = slotCode;
+        this.startDate = startDate.toString();
+        this.endDate = endDate.toString();
+        this.identifier1 = identifier1;
+        this.identifier2 = identifier2;
+        this.identifier3 = identifier3;
+        this.identifier4 = identifier4;
+        this.isFunctional = isFunctional;
+        this.slotTypeId = slotTypeId.toString();
+        this.parkingGarageId = parkingGarageId.toString();
+        this.isReserved = isReserved;
+    }
+
     public SlotDTO() {
+    }
+
+    public String getSlotId() {
+        return slotId;
+    }
+
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }
+
+    public String getSlotTypeId() {
+        return slotTypeId;
+    }
+
+    public void setSlotTypeId(String slotTypeId) {
+        this.slotTypeId = slotTypeId;
+    }
+
+    public String getParkingGarageId() {
+        return parkingGarageId;
+    }
+
+    public void setParkingGarageId(String parkingGarageId) {
+        this.parkingGarageId = parkingGarageId;
     }
 
     public String getSlotCode() {
@@ -94,22 +137,6 @@ public class SlotDTO {
 
     public void setFunctional(boolean functional) {
         isFunctional = functional;
-    }
-
-    public String getSlotTypeId() {
-        return slotTypeId;
-    }
-
-    public void setSlotTypeId(String slotTypeId) {
-        this.slotTypeId = slotTypeId;
-    }
-
-    public String getParkingGarageId() {
-        return parkingGarageId;
-    }
-
-    public void setParkingGarageId(String parkingGarageId) {
-        this.parkingGarageId = parkingGarageId;
     }
 
     public String getNearestExitName() {

@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.save(populateUserFromRegistrationRequest(registrationRequest));
             Role dbRole = roleRepository.findByRoleName(role);
+            if (Objects.isNull(dbRole)) {
+                throw new Exception("Role does not exists");
+            }
             userRoleRepository.save(new UserRole(user, dbRole));
             return "success";
         } catch (Exception e) {

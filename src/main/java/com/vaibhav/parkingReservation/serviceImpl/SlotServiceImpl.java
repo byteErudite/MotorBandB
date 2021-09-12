@@ -1,6 +1,7 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
+import com.vaibhav.parkingReservation.DTOs.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.customRepositories.SlotCustomRepository;
@@ -12,6 +13,7 @@ import com.vaibhav.parkingReservation.mapper.SlotTypeMapper;
 import com.vaibhav.parkingReservation.repositories.ParkingGarageRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
 import com.vaibhav.parkingReservation.repositories.SlotTypeRepository;
+import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 import com.vaibhav.parkingReservation.services.SlotService;
 import com.vaibhav.parkingReservation.utilities.CommonUtilities;
@@ -51,8 +53,8 @@ public class SlotServiceImpl implements SlotService {
     SlotMapper slotMapper;
 
     @Override
-    public List<Slot> getAllSlots() {
-        return slotRepository.findAll();
+    public SlotSearchResponse getAllSlots(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
+        return slotCustomRepository.getslots(slotSearchRequest, pageNumber, pageSize);
     }
 
 

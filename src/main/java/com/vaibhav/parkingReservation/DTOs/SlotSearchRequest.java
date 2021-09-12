@@ -1,8 +1,10 @@
 package com.vaibhav.parkingReservation.DTOs;
 
+import java.util.Set;
+
 public class SlotSearchRequest {
 
-    String slotId;
+    private Set<String> slotIds;
     String startDateTime;
     String endDateTime;
     String parkingGarageId;
@@ -18,12 +20,12 @@ public class SlotSearchRequest {
     public SlotSearchRequest() {
     }
 
-    public String getSlotId() {
-        return slotId;
+    public Set<String> getSlotIds() {
+        return slotIds;
     }
 
-    public void setSlotId(String slotId) {
-        this.slotId = slotId;
+    public void setSlotIds(Set<String> slotIds) {
+        this.slotIds = slotIds;
     }
 
     public String getStartDateTime() {

@@ -11,6 +11,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
+
     User findByUsername(String username);
 
     @Query(value = "Select user from User user where user.username = :username and user.email = :email")

@@ -1,16 +1,17 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
+import com.vaibhav.parkingReservation.DTOs.BookingDTO;
 import com.vaibhav.parkingReservation.DTOs.BookingRequest;
 import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
 import com.vaibhav.parkingReservation.entity.Booking;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.User;
+import com.vaibhav.parkingReservation.mapper.BookingMapper;
 import com.vaibhav.parkingReservation.repositories.BookingRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
 import com.vaibhav.parkingReservation.repositories.UserRepository;
 import com.vaibhav.parkingReservation.services.BookingService;
-import com.vaibhav.parkingReservation.services.ParkingService;
 import com.vaibhav.parkingReservation.utilities.CommonUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,9 +35,12 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     BookingRepository bookingRepository;
 
+    @Autowired
+    BookingMapper bookingMapper;
+
     @Override
     @Transactional
-    public Booking createBooking(BookingRequest bookingRequest) throws Exception {
+    public BookingDTO createBooking(BookingRequest bookingRequest) throws Exception {
         Optional<Slot> slot = slotRepository.findById(UUID.fromString(bookingRequest.getSlotId()));
         if (!slot.isPresent()) {
             throw new Exception("Invalid slot, please try with a valid slot");
@@ -48,6 +52,10 @@ public class BookingServiceImpl implements BookingService {
         Date startDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getStartDateTime());
         Date endDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getEndDateTime());
 
+        if (startDateTime.before(slot.get().getStartDate()) || endDateTime.after(slot.get().getEndDate())) {
+            throw new Exception("Time range selected in not inside slot");
+        }
+
         splitSlots(slot.get(), startDateTime, endDateTime);
         Booking booking = new Booking();
         booking.setSlot(slot.get());
@@ -57,10 +65,10 @@ public class BookingServiceImpl implements BookingService {
         booking.setStartDate(new Timestamp(startDateTime.getTime()));
         booking.setEndDate(new Timestamp(endDateTime.getTime()));
         bookingRepository.save(booking);
-        return booking;
+        return bookingMapper.BookingToBookingDTO(booking);
     }
 
-    private void setSplitSlotCode(String originalSlotCode, Slot slot) {
+    private void setSplitSlotCode(Slot slot, String originalSlotCode) {
         int length = originalSlotCode.length();
         int slotCounter = Integer.valueOf(originalSlotCode.substring(length -1));
         slotCounter++;
@@ -74,13 +82,13 @@ public class BookingServiceImpl implements BookingService {
 
         startSlot.setStartDate(slot.getStartDate());
         startSlot.setEndDate(startDateTime);
-        setSplitSlotCode(slot.getSlotCode(), startSlot);
+        setSplitSlotCode(startSlot, slot.getSlotCode());
         slotsToSave.add(startSlot);
 
 
         endSlot.setStartDate(endDateTime);
         endSlot.setEndDate(slot.getEndDate());
-        setSplitSlotCode(startSlot.getSlotCode(), endSlot);
+        setSplitSlotCode(endSlot, startSlot.getSlotCode());
         slotsToSave.add(endSlot);
 
         slot.setIsDeleted(true);

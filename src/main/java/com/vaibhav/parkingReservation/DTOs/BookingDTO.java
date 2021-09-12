@@ -1,42 +1,24 @@
-package com.vaibhav.parkingReservation.entity;
+package com.vaibhav.parkingReservation.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
-import org.hibernate.annotations.GenericGenerator;
+import com.vaibhav.parkingReservation.entity.BaseEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Entity
-@Table(name = "booking")
-public class Booking extends BaseEntity implements Serializable {
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @GeneratedValue(generator = "uuid")
+public class BookingDTO extends BaseEntity implements Serializable {
+
     private UUID bookingId;
     private Timestamp startDate;
     private Timestamp endDate;
     private PaymentStatus paymentStatus;
     private BookingStatus bookingStatus;
+    private UUID slotId;
+    private UUID userId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "slotId")
-    private Slot slot;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId")
-    private User user;
-
-    public Booking() {
+    public BookingDTO() {
     }
 
     public UUID getBookingId() {
@@ -79,35 +61,32 @@ public class Booking extends BaseEntity implements Serializable {
         this.bookingStatus = bookingStatus;
     }
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public Slot getSlot() {
-        return slot;
+    public UUID getSlotId() {
+        return slotId;
     }
 
-    public void setSlot(Slot slot) {
-        this.slot = slot;
+    public void setSlotId(UUID slotId) {
+        this.slotId = slotId;
     }
 
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public User getUser() {
-        return user;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Booking{");
+        final StringBuilder sb = new StringBuilder("BookingDTO{");
         sb.append("bookingId=").append(bookingId);
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
         sb.append(", paymentStatus=").append(paymentStatus);
         sb.append(", bookingStatus=").append(bookingStatus);
-        sb.append(", slot=").append(slot);
-        sb.append(", user=").append(user);
+        sb.append(", slotId=").append(slotId);
+        sb.append(", userId=").append(userId);
         sb.append('}');
         return sb.toString();
     }

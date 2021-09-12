@@ -1,10 +1,12 @@
 package com.vaibhav.parkingReservation.controllers;
 
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
+import com.vaibhav.parkingReservation.DTOs.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.SlotType;
+import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 import com.vaibhav.parkingReservation.services.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,13 @@ public class SlotController {
     @Autowired
     private SlotService slotService;
 
-    @GetMapping(path = "/all")
-    public ResponseEntity<List<Slot>> getAllSlots() {
-        return new ResponseEntity<>(slotService.getAllSlots(), HttpStatus.OK);
+    @GetMapping(path = "/search")
+    public ResponseEntity<SlotSearchResponse> getAllSlots(@RequestParam(required = false, defaultValue = "1") final Integer pageNo,
+                                                          @RequestParam(required = false, defaultValue = "20") final Integer pageSize, SlotSearchRequest slotSearchRequest) {
+        return new ResponseEntity<>(slotService.getAllSlots(slotSearchRequest, pageNo, pageSize), HttpStatus.OK);
     }
 
-    @PostMapping (path = "/type/all")
+    @GetMapping  (path = "/type/search")
     public ResponseEntity<SlotTypeSearchResponse> getAllSlotTypes(@RequestParam(required = false, defaultValue = "1") final Integer pageNo,
                                                                   @RequestParam(required = false, defaultValue = "20") final Integer pageSize, SlotTypeSearchRequest slotTypeSearchRequest) {
         return new ResponseEntity<>(slotService.getAllSlotTypes(slotTypeSearchRequest,pageNo,pageSize), HttpStatus.OK);
