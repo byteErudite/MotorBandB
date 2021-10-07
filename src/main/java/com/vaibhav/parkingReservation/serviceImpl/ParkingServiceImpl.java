@@ -5,6 +5,8 @@ import com.vaibhav.parkingReservation.DTOs.ParkingGarageDTO;
 import com.vaibhav.parkingReservation.entity.Address;
 import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.User;
+import com.vaibhav.parkingReservation.exceptions.BadRequestException;
+import com.vaibhav.parkingReservation.exceptions.ResourceCreationFailureException;
 import com.vaibhav.parkingReservation.mapper.AddressMapper;
 import com.vaibhav.parkingReservation.mapper.ParkingGarageMapper;
 import com.vaibhav.parkingReservation.repositories.AddressRepository;
@@ -40,7 +42,7 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     @Transactional
-    public ParkingGarage createGarage(ParkingGarageDTO parkingGarageDTO) throws Exception {
+    public ParkingGarage createGarage(ParkingGarageDTO parkingGarageDTO) {
         SystemUserDetails owner = (SystemUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(owner.getUsername());
         validateRequest(user, parkingGarageDTO);
@@ -51,23 +53,23 @@ public class ParkingServiceImpl implements ParkingService {
             return parkingGarageRepository.save(parkingGarage);
         } catch (Exception e) {
             System.out.println("Garage addition failed");
-            throw new Exception("Garage addition failed, please try again");
+            throw new ResourceCreationFailureException("Garage addition failed, please try again");
         }
     }
 
-    private void validateRequest(User user, ParkingGarageDTO parkingGarageDTO) throws Exception {
+    private void validateRequest(User user, ParkingGarageDTO parkingGarageDTO) {
         if (Objects.nonNull(user) && !user.getUserId().equals(parkingGarageDTO.getUserId())) {
-            throw new Exception("Illegal operation, cannot create garage for other user");
+            throw new BadRequestException("Illegal operation, cannot create garage for other user");
         }
         if (Objects.isNull(parkingGarageDTO.getUserId())) {
-            throw new Exception("Invalid user ID");
+            throw new BadRequestException("Invalid user ID");
         }
     }
 
-    private Address addAddress(AddressDTO address) throws Exception {
+    private Address addAddress(AddressDTO address) {
         if (CommonUtilities.isEmpty(address.getPinCode()) || CommonUtilities.isEmpty(address.getCity())
                 || CommonUtilities.isEmpty(address.getCity()) || CommonUtilities.isEmpty(address.getCountry())) {
-            throw new Exception("Address fields cannot be null or empty");
+            throw new BadRequestException("Address fields cannot be null or empty");
         }
         return addressRepository.save(addressMapper.AddressDTOToAddress(address));
     }

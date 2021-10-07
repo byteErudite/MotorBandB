@@ -7,6 +7,7 @@ import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
 import com.vaibhav.parkingReservation.entity.Booking;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.User;
+import com.vaibhav.parkingReservation.exceptions.BadRequestException;
 import com.vaibhav.parkingReservation.mapper.BookingMapper;
 import com.vaibhav.parkingReservation.repositories.BookingRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
@@ -40,23 +41,23 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDTO createBooking(BookingRequest bookingRequest) throws Exception {
+    public BookingDTO createBooking(BookingRequest bookingRequest) {
         Optional<Slot> slot = slotRepository.findById(UUID.fromString(bookingRequest.getSlotId()));
         if (!slot.isPresent()) {
-            throw new Exception("Invalid slot, please try with a valid slot");
+            throw new BadRequestException("Invalid slot, please try with a valid slot");
         }
         Optional<User> user = userRepository.findById(UUID.fromString(bookingRequest.getUserId()));
         if (!user.isPresent()) {
-            throw new Exception("Invalid userId, please try with a valid user");
+            throw new BadRequestException("Invalid userId, please try with a valid user");
         }
         Date startDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getStartDateTime());
         Date endDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getEndDateTime());
 
         if (startDateTime.before(slot.get().getStartDate()) || endDateTime.after(slot.get().getEndDate())) {
-            throw new Exception("Time range selected in not inside slot");
+            throw new BadRequestException("Time range selected in not inside slot");
         }
 
-        splitSlots(slot.get(), startDateTime, endDateTime);
+        splitSlots(slot.get(), new Timestamp(startDateTime.getTime()), new Timestamp(endDateTime.getTime()));
         Booking booking = new Booking();
         booking.setSlot(slot.get());
         booking.setUser(user.get());
@@ -75,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
         slot.setSlotCode(originalSlotCode.substring(0,length-2) + slotCounter);
     }
 
-    private void splitSlots(Slot slot, Date startDateTime, Date endDateTime) {
+    private void splitSlots(Slot slot, Timestamp startDateTime, Timestamp endDateTime) {
         List<Slot> slotsToSave = new ArrayList<>();
         Slot startSlot = slot.copyObject();
         Slot endSlot = slot.copyObject();

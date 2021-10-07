@@ -154,4 +154,25 @@ public class SlotDTO {
     public void setReserved(boolean reserved) {
         isReserved = reserved;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("SlotDTO{");
+        sb.append("slotId='").append(slotId).append('\'');
+        sb.append(", nearestExit=").append(nearestExit);
+        sb.append(", nearestExitName='").append(nearestExitName).append('\'');
+        sb.append(", slotCode='").append(slotCode).append('\'');
+        sb.append(", startDate='").append(startDate).append('\'');
+        sb.append(", endDate='").append(endDate).append('\'');
+        sb.append(", identifier1='").append(identifier1).append('\'');
+        sb.append(", identifier2='").append(identifier2).append('\'');
+        sb.append(", identifier3='").append(identifier3).append('\'');
+        sb.append(", identifier4='").append(identifier4).append('\'');
+        sb.append(", isFunctional=").append(isFunctional);
+        sb.append(", slotTypeId='").append(slotTypeId).append('\'');
+        sb.append(", parkingGarageId='").append(parkingGarageId).append('\'');
+        sb.append(", isReserved=").append(isReserved);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -8,6 +8,7 @@ import com.vaibhav.parkingReservation.customRepositories.SlotCustomRepository;
 import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.SlotType;
+import com.vaibhav.parkingReservation.exceptions.BadRequestException;
 import com.vaibhav.parkingReservation.mapper.SlotMapper;
 import com.vaibhav.parkingReservation.mapper.SlotTypeMapper;
 import com.vaibhav.parkingReservation.repositories.ParkingGarageRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -94,9 +96,9 @@ public class SlotServiceImpl implements SlotService {
         return processedSlots;
     }
 
-    private Slot saveSlot(SlotDTO slotDTO) throws Exception {
+    private Slot saveSlot(SlotDTO slotDTO) {
         if (CommonUtilities.isEmpty(slotDTO.getParkingGarageId()) || CommonUtilities.isEmpty(slotDTO.getSlotTypeId())) {
-            throw new Exception("Parking garage id or slotType id cannot be null or empty");
+            throw new BadRequestException("Parking garage id or slotType id cannot be null or empty");
         }
         Slot slot = slotMapper.slotDTOToSlot(slotDTO);
         setTimeAndCode(slot, slotDTO);
@@ -107,36 +109,36 @@ public class SlotServiceImpl implements SlotService {
     private void setTimeAndCode(Slot slot, SlotDTO slotDTO) {
         Date startDate = CommonUtilities.getDateFromString(slotDTO.getStartDate());
         if (Objects.isNull(startDate) || startDate.before(new Date(System.currentTimeMillis()))) {
-            slot.setStartDate(new Date(System.currentTimeMillis()));
+            slot.setStartDate(new Timestamp(System.currentTimeMillis()));
         }
-        slot.setEndDate(CommonUtilities.getDateFromString("01/01/2050"));
+        slot.setEndDate(new Timestamp(CommonUtilities.getDateFromString("01/01/2050").getTime()));
         String slotCode = UUID.randomUUID().toString().replace("-","") + HYPHEN + 0;
         slot.setSlotCode(slotCode);
         slotDTO.setSlotCode(slotDTO.getIdentifier1().substring(0,5) + slotDTO.getIdentifier2().substring(0,5) + slotDTO.getIdentifier3().substring(0,5));
     }
 
-    private void setGarageAndSlotType(Slot slot, SlotDTO slotDTO) throws Exception {
+    private void setGarageAndSlotType(Slot slot, SlotDTO slotDTO) {
         Optional<ParkingGarage> parkingGarage = parkingGarageRepository.findById(UUID.fromString(slotDTO.getParkingGarageId()));
         Optional<SlotType> slotType = slotTypeRepository.findById(UUID.fromString(slotDTO.getSlotTypeId()));
 
         if (!parkingGarage.isPresent()) {
-            throw new Exception("Invalid parking garage Id");
+            throw new BadRequestException("Invalid parking garage Id");
         }
         if (!slotType.isPresent()) {
-            throw new Exception("Invalid slot type Id");
+            throw new BadRequestException("Invalid slot type Id");
         }
         slot.setFunctional(true);
         slot.setParkingGarage(parkingGarage.get());
         slot.setSlotType(slotType.get());
     }
 
-    private SlotType saveSlotType(SlotTypeDTO slotTypeDTO) throws Exception {
+    private SlotType saveSlotType(SlotTypeDTO slotTypeDTO) {
         if (Objects.isNull(slotTypeDTO.getParkingGarageId())) {
-            throw new Exception("parkingGarageId missing in request");
+            throw new BadRequestException("parkingGarageId missing in request");
         }
         Optional<ParkingGarage> parkingGarage = parkingGarageRepository.findById(slotTypeDTO.getParkingGarageId());
         if (!parkingGarage.isPresent()) {
-            throw new Exception("Invalid parkingGarageId");
+            throw new BadRequestException("Invalid parkingGarageId");
         }
         SlotType slotType = slotTypeMapper.slotTypeDTOToSlotType(slotTypeDTO);
         slotType.setParkingGarage(parkingGarage.get());

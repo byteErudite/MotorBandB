@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -32,8 +33,8 @@ public class Slot extends BaseEntity implements Serializable {
     private Float nearestExit;
     private String nearestExitName;
     private String slotCode;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private String identifier1;//floor
     private String identifier2;//block
     private String identifier3;//row
@@ -60,19 +61,19 @@ public class Slot extends BaseEntity implements Serializable {
         this.slotCode = slotCode;
     }
 
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 
@@ -80,7 +81,7 @@ public class Slot extends BaseEntity implements Serializable {
         return new Slot(this.slotType, this.nearestExit, this.nearestExitName, this.slotCode, this.startDate, this.endDate, this.identifier1, this.identifier2, this.identifier3, this.identifier4, this.isFunctional, this.isReserved, this.booking, this.parkingGarage);
     }
 
-    public Slot(SlotType slotType, Float nearestExit, String nearestExitName, String slotCode, Date startDate, Date endDate, String identifier1, String identifier2, String identifier3, String identifier4, boolean isFunctional, boolean isReserved, Booking booking, ParkingGarage parkingGarage) {
+    public Slot(SlotType slotType, Float nearestExit, String nearestExitName, String slotCode, Timestamp startDate, Timestamp endDate, String identifier1, String identifier2, String identifier3, String identifier4, boolean isFunctional, boolean isReserved, Booking booking, ParkingGarage parkingGarage) {
         this.slotId = slotId;
         this.slotType = slotType;
         this.nearestExit = nearestExit;
