@@ -29,13 +29,13 @@ public class SlotController {
     @Autowired
     private SlotService slotService;
 
-    @GetMapping(path = "/search")
+    @PostMapping(path = "/search")
     public ResponseEntity<SlotSearchResponse> getAllSlots(@RequestParam(required = false, defaultValue = "1") final Integer pageNo,
                                                           @RequestParam(required = false, defaultValue = "20") final Integer pageSize, SlotSearchRequest slotSearchRequest) {
-        return new ResponseEntity<>(slotService.getAllSlots(slotSearchRequest, pageNo, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(slotService.searchSlotTypes(slotSearchRequest, pageNo, pageSize), HttpStatus.OK);
     }
 
-    @GetMapping  (path = "/type/search")
+    @PostMapping (path = "/type/search")
     public ResponseEntity<SlotTypeSearchResponse> getAllSlotTypes(@RequestParam(required = false, defaultValue = "1") final Integer pageNo,
                                                                   @RequestParam(required = false, defaultValue = "20") final Integer pageSize, SlotTypeSearchRequest slotTypeSearchRequest) {
         return new ResponseEntity<>(slotService.getAllSlotTypes(slotTypeSearchRequest,pageNo,pageSize), HttpStatus.OK);
@@ -52,8 +52,8 @@ public class SlotController {
         return new ResponseEntity<>(slotService.addSlots(slots), HttpStatus.OK);
     }
 
-//    @PostMapping(path = "/search")
-//    public ResponseEntity<Map<String,Object>> searchSlot(@RequestBody List<SlotTypeDTO> slotTypes) {
-//        return new ResponseEntity<>(slotService.addSlotTypes(slotTypes), HttpStatus.OK);
+//    @PostMapping(path = "/type/search")
+//    public ResponseEntity<Map<String,Object>> searchSlot(@RequestBody SlotSearchRequest slotSearchRequest) {
+//        return new ResponseEntity<>(slotService.searchSlotTypes(), HttpStatus.OK);
 //    }
 }

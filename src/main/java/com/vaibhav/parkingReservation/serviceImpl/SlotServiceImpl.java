@@ -7,11 +7,13 @@ import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.customRepositories.SlotCustomRepository;
 import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.Slot;
+import com.vaibhav.parkingReservation.entity.SlotAvailability;
 import com.vaibhav.parkingReservation.entity.SlotType;
 import com.vaibhav.parkingReservation.exceptions.BadRequestException;
 import com.vaibhav.parkingReservation.mapper.SlotMapper;
 import com.vaibhav.parkingReservation.mapper.SlotTypeMapper;
 import com.vaibhav.parkingReservation.repositories.ParkingGarageRepository;
+import com.vaibhav.parkingReservation.repositories.SlotAvailabilityRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
 import com.vaibhav.parkingReservation.repositories.SlotTypeRepository;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
@@ -24,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,10 +55,13 @@ public class SlotServiceImpl implements SlotService {
     ParkingGarageRepository parkingGarageRepository;
 
     @Autowired
+    SlotAvailabilityRepository slotAvailabilityRepository;
+
+    @Autowired
     SlotMapper slotMapper;
 
     @Override
-    public SlotSearchResponse getAllSlots(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
+    public SlotSearchResponse searchSlotTypes(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
         return slotCustomRepository.getslots(slotSearchRequest, pageNumber, pageSize);
     }
 
@@ -78,7 +84,7 @@ public class SlotServiceImpl implements SlotService {
     }
 
     public SlotTypeSearchResponse getAllSlotTypes(SlotTypeSearchRequest slotTypeSearchRequest, int pageNumber, int pageSize) {
-        return slotCustomRepository.getslotTypes(slotTypeSearchRequest, pageNumber, pageSize);
+        return slotCustomRepository.searchSlotTypes(slotTypeSearchRequest, pageNumber, pageSize);
     }
 
     @Override
@@ -103,18 +109,28 @@ public class SlotServiceImpl implements SlotService {
         Slot slot = slotMapper.slotDTOToSlot(slotDTO);
         setTimeAndCode(slot, slotDTO);
         setGarageAndSlotType(slot, slotDTO);
-        return slotRepository.save(slot);
+        slot = slotRepository.save(slot);
+        saveSlotAvailability(slot, slotDTO);
+        return slot;
     }
 
     private void setTimeAndCode(Slot slot, SlotDTO slotDTO) {
-        Date startDate = CommonUtilities.getDateFromString(slotDTO.getStartDate());
-        if (Objects.isNull(startDate) || startDate.before(new Date(System.currentTimeMillis()))) {
-            slot.setStartDate(new Timestamp(System.currentTimeMillis()));
-        }
-        slot.setEndDate(new Timestamp(CommonUtilities.getDateFromString("01/01/2050").getTime()));
+
         String slotCode = UUID.randomUUID().toString().replace("-","") + HYPHEN + 0;
         slot.setSlotCode(slotCode);
         slotDTO.setSlotCode(slotDTO.getIdentifier1().substring(0,5) + slotDTO.getIdentifier2().substring(0,5) + slotDTO.getIdentifier3().substring(0,5));
+    }
+
+    private void saveSlotAvailability(Slot slot, SlotDTO slotDTO) {
+        SlotAvailability slotAvailability = new SlotAvailability();
+        Date startDate = CommonUtilities.getDateFromString(slotDTO.getStartDate());
+        if (Objects.isNull(startDate) || startDate.before(new Date(System.currentTimeMillis()))) {
+            slotAvailability.setStartTime(new Timestamp(System.currentTimeMillis()));
+        }
+        slotAvailability.setEndTime(new Timestamp(CommonUtilities.getDateFromString("01/01/2050").getTime()));
+        slot.setSlotAvailabilities(Arrays.asList(slotAvailability));
+        slotAvailability.setSlotId(slot.getSlotId());
+        slotAvailabilityRepository.save(slotAvailability);
     }
 
     private void setGarageAndSlotType(Slot slot, SlotDTO slotDTO) {

@@ -72,7 +72,7 @@ public class SlotCustomRepository {
         return slotSearchResponse;
     }
 
-    public SlotTypeSearchResponse getslotTypes(SlotTypeSearchRequest slotTypeSearchRequest,int pageNumber, int pageSize) {
+    public SlotTypeSearchResponse searchSlotTypes(SlotTypeSearchRequest slotTypeSearchRequest, int pageNumber, int pageSize) {
         Map<String, Object> parameters = new HashMap<>();
         final String whereQuery = generateWhereQueryForSlotTypeSearch(slotTypeSearchRequest, parameters);
         int totalCount = getTotalCountForSearchRequest(DISTINCT_SLOT_TYPE_COUNT_QUERY, parameters, whereQuery, SLOT_TYPE_FROM_CLAUSE);

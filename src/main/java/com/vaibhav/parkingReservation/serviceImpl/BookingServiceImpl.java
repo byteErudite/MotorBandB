@@ -6,10 +6,12 @@ import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
 import com.vaibhav.parkingReservation.entity.Booking;
 import com.vaibhav.parkingReservation.entity.Slot;
+import com.vaibhav.parkingReservation.entity.SlotAvailability;
 import com.vaibhav.parkingReservation.entity.User;
 import com.vaibhav.parkingReservation.exceptions.BadRequestException;
 import com.vaibhav.parkingReservation.mapper.BookingMapper;
 import com.vaibhav.parkingReservation.repositories.BookingRepository;
+import com.vaibhav.parkingReservation.repositories.SlotAvailabilityRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
 import com.vaibhav.parkingReservation.repositories.UserRepository;
 import com.vaibhav.parkingReservation.services.BookingService;
@@ -22,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +40,9 @@ public class BookingServiceImpl implements BookingService {
     BookingRepository bookingRepository;
 
     @Autowired
+    SlotAvailabilityRepository slotAvailabilityRepository;
+
+    @Autowired
     BookingMapper bookingMapper;
 
     @Override
@@ -46,18 +52,23 @@ public class BookingServiceImpl implements BookingService {
         if (!slot.isPresent()) {
             throw new BadRequestException("Invalid slot, please try with a valid slot");
         }
+
         Optional<User> user = userRepository.findById(UUID.fromString(bookingRequest.getUserId()));
         if (!user.isPresent()) {
             throw new BadRequestException("Invalid userId, please try with a valid user");
         }
+        SlotAvailability slotAvailability = bookingRequest.getSlotAvailability();
+        if (Objects.isNull(slotAvailability)) {
+            throw new BadRequestException("Slot availability is absent in request");
+        }
         Date startDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getStartDateTime());
         Date endDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getEndDateTime());
 
-        if (startDateTime.before(slot.get().getStartDate()) || endDateTime.after(slot.get().getEndDate())) {
+        if (startDateTime.after(slotAvailability.getStartTime()) || endDateTime.before(slotAvailability.getEndTime())) {
             throw new BadRequestException("Time range selected in not inside slot");
         }
 
-        splitSlots(slot.get(), new Timestamp(startDateTime.getTime()), new Timestamp(endDateTime.getTime()));
+        splitSlotAvailability(slotAvailability, new Timestamp(startDateTime.getTime()), new Timestamp(endDateTime.getTime()));
         Booking booking = new Booking();
         booking.setSlot(slot.get());
         booking.setUser(user.get());
@@ -76,25 +87,22 @@ public class BookingServiceImpl implements BookingService {
         slot.setSlotCode(originalSlotCode.substring(0,length-2) + slotCounter);
     }
 
-    private void splitSlots(Slot slot, Timestamp startDateTime, Timestamp endDateTime) {
-        List<Slot> slotsToSave = new ArrayList<>();
-        Slot startSlot = slot.copyObject();
-        Slot endSlot = slot.copyObject();
+    private void splitSlotAvailability(SlotAvailability originalSlotlotAvailability, Timestamp bookingStartDateTime, Timestamp bookingEndDateTime) {
+        List<SlotAvailability> updatedAvailabilities = new ArrayList<>();
 
-        startSlot.setStartDate(slot.getStartDate());
-        startSlot.setEndDate(startDateTime);
-        setSplitSlotCode(startSlot, slot.getSlotCode());
-        slotsToSave.add(startSlot);
+        SlotAvailability slotAvailability1 = originalSlotlotAvailability.copyObject();
+        SlotAvailability slotAvailability2 = originalSlotlotAvailability.copyObject();
+
+        slotAvailability1.setEndTime(bookingStartDateTime);
+        updatedAvailabilities.add(slotAvailability1);
 
 
-        endSlot.setStartDate(endDateTime);
-        endSlot.setEndDate(slot.getEndDate());
-        setSplitSlotCode(endSlot, startSlot.getSlotCode());
-        slotsToSave.add(endSlot);
+        slotAvailability2.setStartTime(bookingEndDateTime);
+        updatedAvailabilities.add(slotAvailability2);
 
-        slot.setIsDeleted(true);
-        slotsToSave.add(slot);
+        originalSlotlotAvailability.setIsDeleted(true);
+        updatedAvailabilities.add(originalSlotlotAvailability);
 
-        slotRepository.saveAll(slotsToSave);
+        slotAvailabilityRepository.saveAll(updatedAvailabilities);
     }
 }

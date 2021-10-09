@@ -1,12 +1,15 @@
 package com.vaibhav.parkingReservation.DTOs;
 
+import com.vaibhav.parkingReservation.entity.SlotAvailability;
+
 public class BookingRequest {
 
-    String startDateTime;
-    String endDateTime;
-    String userId;
-    String parkingGarageId;
-    String slotId;
+    private String startDateTime;
+    private String endDateTime;
+    private String userId;
+    private String parkingGarageId;
+    private String slotId;
+    private SlotAvailability slotAvailability;
 
 
     public String getStartDateTime() {
@@ -47,5 +50,13 @@ public class BookingRequest {
 
     public void setSlotId(String slotId) {
         this.slotId = slotId;
+    }
+
+    public SlotAvailability getSlotAvailability() {
+        return slotAvailability;
+    }
+
+    public void setSlotAvailability(SlotAvailability slotAvailability) {
+        this.slotAvailability = slotAvailability;
     }
 }

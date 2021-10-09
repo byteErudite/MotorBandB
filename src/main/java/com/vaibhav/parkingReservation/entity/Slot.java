@@ -10,11 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "slot")
@@ -30,11 +32,12 @@ public class Slot extends BaseEntity implements Serializable {
     @JoinColumn(name="slotTypeId", nullable=false)
     private SlotType slotType;
 
+    @OneToMany(mappedBy="slot")
+    private List<SlotAvailability> slotAvailabilities;
+
     private Float nearestExit;
     private String nearestExitName;
     private String slotCode;
-    private Timestamp startDate;
-    private Timestamp endDate;
     private String identifier1;//floor
     private String identifier2;//block
     private String identifier3;//row
@@ -61,34 +64,15 @@ public class Slot extends BaseEntity implements Serializable {
         this.slotCode = slotCode;
     }
 
-    public Timestamp getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Timestamp startDate) {
-        this.startDate = startDate;
-    }
-
-    public Timestamp getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Timestamp endDate) {
-        this.endDate = endDate;
-    }
-
     public Slot copyObject() {
-        return new Slot(this.slotType, this.nearestExit, this.nearestExitName, this.slotCode, this.startDate, this.endDate, this.identifier1, this.identifier2, this.identifier3, this.identifier4, this.isFunctional, this.isReserved, this.booking, this.parkingGarage);
+        return new Slot(this.slotType, this.nearestExit, this.nearestExitName, this.slotCode, this.identifier1, this.identifier2, this.identifier3, this.identifier4, this.isFunctional, this.isReserved, this.booking, this.parkingGarage);
     }
 
-    public Slot(SlotType slotType, Float nearestExit, String nearestExitName, String slotCode, Timestamp startDate, Timestamp endDate, String identifier1, String identifier2, String identifier3, String identifier4, boolean isFunctional, boolean isReserved, Booking booking, ParkingGarage parkingGarage) {
-        this.slotId = slotId;
+    public Slot(SlotType slotType, Float nearestExit, String nearestExitName, String slotCode, String identifier1, String identifier2, String identifier3, String identifier4, boolean isFunctional, boolean isReserved, Booking booking, ParkingGarage parkingGarage) {
         this.slotType = slotType;
         this.nearestExit = nearestExit;
         this.nearestExitName = nearestExitName;
         this.slotCode = slotCode;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.identifier1 = identifier1;
         this.identifier2 = identifier2;
         this.identifier3 = identifier3;
@@ -195,6 +179,15 @@ public class Slot extends BaseEntity implements Serializable {
 
     public void setParkingGarage(ParkingGarage parkingGarage) {
         this.parkingGarage = parkingGarage;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public List<SlotAvailability> getSlotAvailabilities() {
+        return slotAvailabilities;
+    }
+
+    public void setSlotAvailabilities(List<SlotAvailability> slotAvailabilities) {
+        this.slotAvailabilities = slotAvailabilities;
     }
 
     @Override

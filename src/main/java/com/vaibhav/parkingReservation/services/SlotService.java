@@ -14,8 +14,7 @@ import java.util.Map;
 
 public interface SlotService {
 
-    SlotSearchResponse getAllSlots(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize);
-
+    SlotSearchResponse searchSlotTypes(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize);
     Map<String,Object> addSlotTypes(List<SlotTypeDTO> slotTypes);
     Map<String,Object> addSlots(List<SlotDTO> slots);
     SlotTypeSearchResponse getAllSlotTypes(SlotTypeSearchRequest slotTypeSearchRequest, int pageNumber, int pageSize);
