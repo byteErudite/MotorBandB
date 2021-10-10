@@ -6,6 +6,7 @@ import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.SlotType;
+import com.vaibhav.parkingReservation.response.SlotAvailabilitySearchResponse;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 import com.vaibhav.parkingReservation.services.SlotService;
@@ -37,8 +38,14 @@ public class SlotController {
 
     @PostMapping (path = "/type/search")
     public ResponseEntity<SlotTypeSearchResponse> getAllSlotTypes(@RequestParam(required = false, defaultValue = "1") final Integer pageNo,
-                                                                  @RequestParam(required = false, defaultValue = "20") final Integer pageSize, SlotTypeSearchRequest slotTypeSearchRequest) {
+                                                                  @RequestParam(required = false, defaultValue = "20") final Integer pageSize,@RequestBody SlotTypeSearchRequest slotTypeSearchRequest) {
         return new ResponseEntity<>(slotService.getAllSlotTypes(slotTypeSearchRequest,pageNo,pageSize), HttpStatus.OK);
+    }
+
+    @PostMapping (path = "/availability/search")
+    public ResponseEntity<SlotAvailabilitySearchResponse> getAllSlotTypes(@RequestParam(required = false, defaultValue = "1") final Integer pageNo,
+                                                                          @RequestParam(required = false, defaultValue = "20") final Integer pageSize, @RequestBody SlotSearchRequest slotSearchRequest) {
+        return new ResponseEntity<>(slotService.searchSlotAvailability(slotSearchRequest,pageNo,pageSize), HttpStatus.OK);
     }
 
 

@@ -16,6 +16,7 @@ import com.vaibhav.parkingReservation.repositories.ParkingGarageRepository;
 import com.vaibhav.parkingReservation.repositories.SlotAvailabilityRepository;
 import com.vaibhav.parkingReservation.repositories.SlotRepository;
 import com.vaibhav.parkingReservation.repositories.SlotTypeRepository;
+import com.vaibhav.parkingReservation.response.SlotAvailabilitySearchResponse;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 import com.vaibhav.parkingReservation.services.SlotService;
@@ -63,6 +64,11 @@ public class SlotServiceImpl implements SlotService {
     @Override
     public SlotSearchResponse searchSlotTypes(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
         return slotCustomRepository.getslots(slotSearchRequest, pageNumber, pageSize);
+    }
+
+    @Override
+    public SlotAvailabilitySearchResponse searchSlotAvailability(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
+        return slotCustomRepository.searchSlotAvailability(slotSearchRequest, pageNumber, pageSize);
     }
 
 

@@ -6,6 +6,7 @@ import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.entity.Slot;
 import com.vaibhav.parkingReservation.entity.SlotType;
+import com.vaibhav.parkingReservation.response.SlotAvailabilitySearchResponse;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public interface SlotService {
 
+    SlotAvailabilitySearchResponse searchSlotAvailability(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize);
     SlotSearchResponse searchSlotTypes(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize);
     Map<String,Object> addSlotTypes(List<SlotTypeDTO> slotTypes);
     Map<String,Object> addSlots(List<SlotDTO> slots);

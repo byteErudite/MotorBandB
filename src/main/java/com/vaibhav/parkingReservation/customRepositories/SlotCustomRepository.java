@@ -1,10 +1,12 @@
 package com.vaibhav.parkingReservation.customRepositories;
 
+import com.vaibhav.parkingReservation.DTOs.SlotAvailabilityDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.response.Page;
+import com.vaibhav.parkingReservation.response.SlotAvailabilitySearchResponse;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
 import com.vaibhav.parkingReservation.utilities.CommonUtilities;
@@ -42,8 +44,14 @@ public class SlotCustomRepository {
             "st.parkingGarage.parkingGarageId as parkingGarageId, " +
             "st.isReserved as isReserved ) ";
 
+    private String SLOT_AVAILABILTIY_SEARCH_QUERY = "Select distinct new com.vaibhav.parkingReservation.DTOs.SlotAvailabilityDTO " +
+            "( sa.availabilityId as availabilityId, " +
+            "sa.slotId as slotId, " +
+            "sa.startTime as startTime, " +
+            "sa.endTime as endTime ) ";
+
     private String DISTINCT_SLOT_COUNT_QUERY = " select count(st.slotId)  ";
-    private String SLOT_FROM_CLAUSE = "from Slot st  ";
+    private String SLOT_FROM_CLAUSE = "from Slot s  ";
 
     private String SLOT_TYPE_SEARCH_QUERY = "Select distinct new com.vaibhav.parkingReservation.DTOs.SlotTypeDTO " +
             "( st.slotTypeId as slotTypeId, " +
@@ -56,9 +64,11 @@ public class SlotCustomRepository {
             "st.dimensionUnit as dimensionUnit, " +
             "st.parkingGarage.parkingGarageId as parkingGarageId ) ";
 
-    private String DISTINCT_SLOT_TYPE_COUNT_QUERY = " select count(st.slotTypeId)  ";
+    private String DISTINCT_SLOT_TYPE_COUNT_QUERY = " Select count ( st.slotTypeId )  ";
     private String SLOT_TYPE_FROM_CLAUSE = "from SlotType st  ";
-    private String NOT_DELETED_CLAUSE = " isDeleted = false  and ";
+    private String DISTINCT_SLOT_AVAILABILTIY_COUNT_QUERY = " Select count ( sa.availabilityId )  ";
+    private String SLOT_AVAILABILTIY_FROM_CLAUSE = "from Slot s join SlotAvailability sa on s.slotId = sa.slotId ";
+    private String NOT_DELETED_CLAUSE = " isDeleted = false ";
 
     public SlotSearchResponse getslots(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
         Map<String, Object> parameters = new HashMap<>();
@@ -70,6 +80,18 @@ public class SlotCustomRepository {
         List<SlotDTO> slots = basicCustomRepository.getQueryResult(SLOT_SEARCH_QUERY + SLOT_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotDTO.class);
         SlotSearchResponse slotSearchResponse = new SlotSearchResponse(new Page(pageSize, totalCount, pageNumber), slots);
         return slotSearchResponse;
+    }
+
+    public SlotAvailabilitySearchResponse searchSlotAvailability(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
+        Map<String, Object> parameters = new HashMap<>();
+        final String whereQuery = generateWhereQueryForSlotSearch(slotSearchRequest, parameters);
+        int totalCount = getTotalCountForSearchRequest(DISTINCT_SLOT_AVAILABILTIY_COUNT_QUERY, parameters, whereQuery, SLOT_AVAILABILTIY_FROM_CLAUSE);
+        if (totalCount == 0) {
+            return new SlotAvailabilitySearchResponse(new Page(pageSize, 0, 0), Collections.emptyList());
+        }
+        List<SlotAvailabilityDTO> slots = basicCustomRepository.getQueryResult(SLOT_AVAILABILTIY_SEARCH_QUERY + SLOT_AVAILABILTIY_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotAvailabilityDTO.class);
+        SlotAvailabilitySearchResponse slotAvailabilitySearchResponse = new SlotAvailabilitySearchResponse(new Page(pageSize, totalCount, pageNumber), slots);
+        return slotAvailabilitySearchResponse;
     }
 
     public SlotTypeSearchResponse searchSlotTypes(SlotTypeSearchRequest slotTypeSearchRequest, int pageNumber, int pageSize) {
@@ -99,58 +121,58 @@ public class SlotCustomRepository {
         if (CommonUtilities.isNotEmpty(slotSearchRequest.getSlotIds())) {
             Set<UUID> slotIds = slotSearchRequest.getSlotIds().stream().map(slotTypeId -> UUID.fromString(slotTypeId)).collect(Collectors.toSet());
             parameters.put("slotIds", slotIds);
-            whereQuery.append(" slotId in (:slotIds) and ");
+            whereQuery.append(" s.slotId in (:slotIds) and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getIdentifier1())) {
             parameters.put("identifier1", slotSearchRequest.getIdentifier1());
-            whereQuery.append(" identifier1 = :identifier1 and ");
+            whereQuery.append(" s.identifier1 = :identifier1 and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getIdentifier2())) {
             parameters.put("identifier2", slotSearchRequest.getIdentifier2());
-            whereQuery.append(" identifier2 = :identifier2 and ");
+            whereQuery.append(" s.identifier2 = :identifier2 and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getIdentifier3())) {
             parameters.put("identifier3", slotSearchRequest.getIdentifier3());
-            whereQuery.append(" identifier3 = :identifier3 and ");
+            whereQuery.append(" s.identifier3 = :identifier3 and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getIdentifier4())) {
             parameters.put("identifier4", slotSearchRequest.getIdentifier4());
-            whereQuery.append(" identifier4 = :identifier4 and ");
+            whereQuery.append(" s.identifier4 = :identifier4 and ");
         }
 
 
         if (Objects.nonNull(slotSearchRequest.getStartDateTime())) {
             parameters.put("startDateTime", slotSearchRequest.getStartDateTime());
-            whereQuery.append(" startDateTime >= :startDateTime and ");
+            whereQuery.append(" sa.startTime >= :startDateTime and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getEndDateTime())) {
             parameters.put("endDateTime", slotSearchRequest.getEndDateTime());
-            whereQuery.append(" endDateTime <= :endDateTime and ");
+            whereQuery.append(" sa.endTime <= :endDateTime and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getNearestExitDistance())) {
             parameters.put("nearestExitDistance", slotSearchRequest.getNearestExitDistance());
-            whereQuery.append(" nearestExitDistance <= :nearestExitDistance and ");
+            whereQuery.append(" s.nearestExit <= :nearestExitDistance and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getExitName())) {
             parameters.put("exitName", slotSearchRequest.getExitName());
-            whereQuery.append(" exitName = :exitName and ");
+            whereQuery.append(" s.nearestExitName = :exitName and ");
         }
 
         if (Objects.nonNull(slotSearchRequest.getParkingGarageId())) {
             parameters.put("parkingGarageId", UUID.fromString(slotSearchRequest.getParkingGarageId()));
-            whereQuery.append(" parkingGarageId = :parkingGarageId and ");
+            whereQuery.append(" s.parkingGarageId = :parkingGarageId and ");
         }
         if (whereQuery.length() < 8) {
-            return "where isDeleted = false ";
+            return "where s.isDeleted = false ";
         }
-        return whereQuery.append(NOT_DELETED_CLAUSE).toString();
+        return whereQuery.append(" s.isDeleted = false and sa.isDeleted = false ").toString();
     }
 
     private String generateWhereQueryForSlotTypeSearch(SlotTypeSearchRequest slotTypeSearchRequest, Map<String, Object> parameters) {
@@ -158,36 +180,36 @@ public class SlotCustomRepository {
         if (CommonUtilities.isNotEmpty(slotTypeSearchRequest.getSlotTypeIds())) {
             Set<UUID> slotTypeIds = slotTypeSearchRequest.getSlotTypeIds().stream().map(slotTypeId -> UUID.fromString(slotTypeId)).collect(Collectors.toSet());
             parameters.put("slotTypeIds", slotTypeIds);
-            whereQuery.append(" slotTypeId in (:slotTypeIds) and ");
+            whereQuery.append(" st.slotTypeId in (:slotTypeIds) and ");
         }
 
         if (Objects.nonNull(slotTypeSearchRequest.getLength())) {
             parameters.put("length", slotTypeSearchRequest.getLength());
-            whereQuery.append(" length <= :length and ");
+            whereQuery.append(" st.length <= :length and ");
         }
 
 
         if (Objects.nonNull(slotTypeSearchRequest.getBreadth())) {
             parameters.put("breadth", slotTypeSearchRequest.getBreadth());
-            whereQuery.append(" breadth <= :breadth and ");
+            whereQuery.append(" st.breadth <= :breadth and ");
         }
 
         if (Objects.nonNull(slotTypeSearchRequest.getDayRate())) {
             parameters.put("dayRate", slotTypeSearchRequest.getDayRate());
-            whereQuery.append(" dateRate <= :dayRate and ");
+            whereQuery.append(" st.dateRate <= :dayRate and ");
         }
 
         if (Objects.nonNull(slotTypeSearchRequest.getMonthRate())) {
             parameters.put("monthRate", slotTypeSearchRequest.getMonthRate());
-            whereQuery.append(" monthRate <= :monthRate and ");
+            whereQuery.append(" st.monthRate <= :monthRate and ");
         }
 
         if (Objects.nonNull(slotTypeSearchRequest.getHourRate())) {
             parameters.put("hourRate", slotTypeSearchRequest.getHourRate());
-            whereQuery.append(" hourRate <= :hourRate and ");
+            whereQuery.append(" st.hourRate <= :hourRate and ");
         }
         if (whereQuery.length() < 8) {
-            return "where isDeleted = false ";
+            return "where st.isDeleted = false ";
         }
         return whereQuery.append(NOT_DELETED_CLAUSE).toString();
     }
