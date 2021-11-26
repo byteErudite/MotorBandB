@@ -1,4 +1,4 @@
-package com.vaibhav.parkingReservation.DTOs;
+package com.vaibhav.parkingReservation.requests;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

@@ -1,8 +1,8 @@
 package com.vaibhav.parkingReservation.DTOs;
 
-import com.vaibhav.parkingReservation.entity.BaseEntity;
-
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 public class UserDTO implements Serializable {
@@ -10,8 +10,45 @@ public class UserDTO implements Serializable {
     private UUID userId;
     private boolean isActive;
     private String name;
+    private String username;
+    private Timestamp addedDate;
+    private String email;
+    private Date dateOfBirth;
+
 
     public UserDTO() {
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Timestamp getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Timestamp addedDate) {
+        this.addedDate = addedDate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public UUID getUserId() {
@@ -44,6 +81,10 @@ public class UserDTO implements Serializable {
         sb.append("userId=").append(userId);
         sb.append(", isActive=").append(isActive);
         sb.append(", name='").append(name).append('\'');
+        sb.append(", username='").append(username).append('\'');
+        sb.append(", addedDate=").append(addedDate);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", dateOfBirth=").append(dateOfBirth);
         sb.append('}');
         return sb.toString();
     }

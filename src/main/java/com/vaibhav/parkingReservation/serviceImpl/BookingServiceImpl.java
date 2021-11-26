@@ -1,7 +1,7 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.DTOs.BookingDTO;
-import com.vaibhav.parkingReservation.DTOs.BookingRequest;
+import com.vaibhav.parkingReservation.requests.BookingRequest;
 import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
 import com.vaibhav.parkingReservation.entity.Booking;

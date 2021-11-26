@@ -1,10 +1,7 @@
 package com.vaibhav.parkingReservation.controllers;
 
 import com.vaibhav.parkingReservation.DTOs.BookingDTO;
-import com.vaibhav.parkingReservation.DTOs.BookingRequest;
-import com.vaibhav.parkingReservation.DTOs.ParkingGarageDTO;
-import com.vaibhav.parkingReservation.entity.Booking;
-import com.vaibhav.parkingReservation.entity.ParkingGarage;
+import com.vaibhav.parkingReservation.requests.BookingRequest;
 import com.vaibhav.parkingReservation.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

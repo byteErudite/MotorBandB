@@ -1,9 +1,9 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
-import com.vaibhav.parkingReservation.DTOs.SlotSearchRequest;
+import com.vaibhav.parkingReservation.requests.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
-import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
+import com.vaibhav.parkingReservation.requests.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.customRepositories.SlotCustomRepository;
 import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.Slot;

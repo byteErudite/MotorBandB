@@ -1,16 +1,20 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
-import com.vaibhav.parkingReservation.DTOs.AuthenticationRequest;
+import com.vaibhav.parkingReservation.requests.AuthenticationRequest;
+import com.vaibhav.parkingReservation.DTOs.UserDTO;
 import com.vaibhav.parkingReservation.constants.constantEntity.AssignedRole;
 import com.vaibhav.parkingReservation.entity.Role;
 import com.vaibhav.parkingReservation.entity.User;
 import com.vaibhav.parkingReservation.entity.UserRole;
+import com.vaibhav.parkingReservation.mapper.UserMapper;
 import com.vaibhav.parkingReservation.repositories.RoleRepository;
 import com.vaibhav.parkingReservation.repositories.UserRepository;
 import com.vaibhav.parkingReservation.repositories.UserRoleRepository;
+import com.vaibhav.parkingReservation.security.SystemUserDetails;
 import com.vaibhav.parkingReservation.services.UserService;
 import com.vaibhav.parkingReservation.utilities.CommonUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     @Transactional
@@ -88,5 +95,18 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Please provide date in dd/mm/yyyy format");
         }
         return new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, new Timestamp(System.currentTimeMillis()), registrationRequest.getEmail(), registrationRequest.getName(), dateOfBirth);
+    }
+
+    public UserDTO findCurrentUser() {
+        SystemUserDetails systemUserDetails = (SystemUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (Objects.isNull(systemUserDetails)) {
+
+        }
+        String username = systemUserDetails.getUsername();
+        User user = userRepository.findByUsername(username);
+        if (Objects.isNull(user)) {
+
+        }
+        return userMapper.userToUserDTO(user);
     }
 }

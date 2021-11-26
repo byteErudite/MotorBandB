@@ -1,11 +1,9 @@
 package com.vaibhav.parkingReservation.controllers;
 
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
-import com.vaibhav.parkingReservation.DTOs.SlotSearchRequest;
+import com.vaibhav.parkingReservation.requests.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
-import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
-import com.vaibhav.parkingReservation.entity.Slot;
-import com.vaibhav.parkingReservation.entity.SlotType;
+import com.vaibhav.parkingReservation.requests.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.response.SlotAvailabilitySearchResponse;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
 import com.vaibhav.parkingReservation.response.SlotTypeSearchResponse;
@@ -13,7 +11,6 @@ import com.vaibhav.parkingReservation.services.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

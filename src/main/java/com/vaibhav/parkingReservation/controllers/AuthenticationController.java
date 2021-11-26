@@ -1,10 +1,9 @@
 package com.vaibhav.parkingReservation.controllers;
 
-import com.vaibhav.parkingReservation.DTOs.AuthenticationRequest;
-import com.vaibhav.parkingReservation.DTOs.AuthenticationResponse;
+import com.vaibhav.parkingReservation.requests.AuthenticationRequest;
+import com.vaibhav.parkingReservation.response.AuthenticationResponse;
 import com.vaibhav.parkingReservation.constants.constantEntity.AssignedRole;
 import com.vaibhav.parkingReservation.security.MyUserDetailService;
-import com.vaibhav.parkingReservation.security.SystemUserDetails;
 import com.vaibhav.parkingReservation.services.UserService;
 import com.vaibhav.parkingReservation.utilities.JwtUTil;
 import org.springframework.beans.factory.annotation.Autowired;

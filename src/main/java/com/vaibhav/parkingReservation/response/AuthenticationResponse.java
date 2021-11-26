@@ -1,4 +1,4 @@
-package com.vaibhav.parkingReservation.DTOs;
+package com.vaibhav.parkingReservation.response;
 
 public class AuthenticationResponse {
     private String jwtToken;

@@ -2,9 +2,9 @@ package com.vaibhav.parkingReservation.customRepositories;
 
 import com.vaibhav.parkingReservation.DTOs.SlotAvailabilityDTO;
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
-import com.vaibhav.parkingReservation.DTOs.SlotSearchRequest;
+import com.vaibhav.parkingReservation.requests.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
-import com.vaibhav.parkingReservation.DTOs.SlotTypeSearchRequest;
+import com.vaibhav.parkingReservation.requests.SlotTypeSearchRequest;
 import com.vaibhav.parkingReservation.response.Page;
 import com.vaibhav.parkingReservation.response.SlotAvailabilitySearchResponse;
 import com.vaibhav.parkingReservation.response.SlotSearchResponse;
