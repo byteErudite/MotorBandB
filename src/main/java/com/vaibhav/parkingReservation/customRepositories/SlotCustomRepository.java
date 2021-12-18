@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class SlotCustomRepository {
 
     @Autowired
-    BasicCustomRepository basicCustomRepository;
+    RootCustomRepository rootCustomRepository;
 
     private String SLOT_SEARCH_QUERY = "Select distinct new com.vaibhav.parkingReservation.DTOs.SlotDTO " +
             "( st.slotId as slotId, " +
@@ -77,7 +77,7 @@ public class SlotCustomRepository {
         if (totalCount == 0) {
             return new SlotSearchResponse(new Page(pageSize, 0, 0), Collections.emptyList());
         }
-        List<SlotDTO> slots = basicCustomRepository.getQueryResult(SLOT_SEARCH_QUERY + SLOT_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotDTO.class);
+        List<SlotDTO> slots = rootCustomRepository.getQueryResult(SLOT_SEARCH_QUERY + SLOT_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotDTO.class);
         SlotSearchResponse slotSearchResponse = new SlotSearchResponse(new Page(pageSize, totalCount, pageNumber), slots);
         return slotSearchResponse;
     }
@@ -89,7 +89,7 @@ public class SlotCustomRepository {
         if (totalCount == 0) {
             return new SlotAvailabilitySearchResponse(new Page(pageSize, 0, 0), Collections.emptyList());
         }
-        List<SlotAvailabilityDTO> slots = basicCustomRepository.getQueryResult(SLOT_AVAILABILTIY_SEARCH_QUERY + SLOT_AVAILABILTIY_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotAvailabilityDTO.class);
+        List<SlotAvailabilityDTO> slots = rootCustomRepository.getQueryResult(SLOT_AVAILABILTIY_SEARCH_QUERY + SLOT_AVAILABILTIY_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotAvailabilityDTO.class);
         SlotAvailabilitySearchResponse slotAvailabilitySearchResponse = new SlotAvailabilitySearchResponse(new Page(pageSize, totalCount, pageNumber), slots);
         return slotAvailabilitySearchResponse;
     }
@@ -101,7 +101,7 @@ public class SlotCustomRepository {
         if (totalCount == 0) {
             return new SlotTypeSearchResponse(new Page(pageSize, 0, 0), Collections.emptyList());
         }
-        List<SlotTypeDTO> slotTypes = basicCustomRepository.getQueryResult(SLOT_TYPE_SEARCH_QUERY + SLOT_TYPE_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotTypeDTO.class);
+        List<SlotTypeDTO> slotTypes = rootCustomRepository.getQueryResult(SLOT_TYPE_SEARCH_QUERY + SLOT_TYPE_FROM_CLAUSE + whereQuery, parameters, pageNumber, pageSize, SlotTypeDTO.class);
         SlotTypeSearchResponse slotTypeSearchResponse = new SlotTypeSearchResponse(new Page(pageSize, totalCount, pageNumber), slotTypes);
         return slotTypeSearchResponse;
     }
@@ -110,7 +110,7 @@ public class SlotCustomRepository {
                                                        final String fromQuery) {
         StringBuilder sql = new StringBuilder(
                 whereQuery.length() + fromQuery.length() + distinctQuery.length() + 1);
-        Long queryCount = basicCustomRepository.getQueryCount(
+        Long queryCount = rootCustomRepository.getQueryCount(
                 sql.append(distinctQuery).append(fromQuery).append(whereQuery).toString(),
                 parameterMap);
         return queryCount.intValue();

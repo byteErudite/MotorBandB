@@ -8,6 +8,7 @@ import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.User;
 import com.vaibhav.parkingReservation.exceptions.BadRequestException;
 import com.vaibhav.parkingReservation.exceptions.ResourceCreationFailureException;
+import com.vaibhav.parkingReservation.logUtil.LoggerHelper;
 import com.vaibhav.parkingReservation.mapper.AddressMapper;
 import com.vaibhav.parkingReservation.mapper.ParkingGarageMapper;
 import com.vaibhav.parkingReservation.repositories.AddressRepository;
@@ -24,6 +25,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Objects;
+
+import static com.vaibhav.parkingReservation.constants.Constants.ERROR;
+import static com.vaibhav.parkingReservation.constants.Constants.INFO;
 
 @Service
 public class ParkingServiceImpl implements ParkingService {
@@ -46,6 +50,9 @@ public class ParkingServiceImpl implements ParkingService {
     @Autowired
     GarageCustomRepository garageCustomRepository;
 
+    @Autowired
+    LoggerHelper loggerHelper;
+
     @Override
     @Transactional
     public ParkingGarage createGarage(ParkingGarageDTO parkingGarageDTO) {
@@ -59,11 +66,13 @@ public class ParkingServiceImpl implements ParkingService {
             return parkingGarageRepository.save(parkingGarage);
         } catch (Exception e) {
             System.out.println("Garage addition failed");
+            loggerHelper.write(ERROR, "GARAGE CREATION FAILED : request -> {} : ", parkingGarageDTO.toString(),e,e.getMessage());
             throw new ResourceCreationFailureException("Garage addition failed, please try again");
         }
     }
 
     public GarageSearchResponse searchGarage(GarageSearchRequest garageSearchRequest, int pageNumber, int size) {
+        loggerHelper.write(INFO, "GARAGE SEARCH PERFORMED : request -> {} : ", garageSearchRequest.toString(),null,null);
         return garageCustomRepository.searchGarage(garageSearchRequest, pageNumber, size);
     }
 

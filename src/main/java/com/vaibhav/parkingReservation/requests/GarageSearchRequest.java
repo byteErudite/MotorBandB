@@ -94,4 +94,21 @@ public class GarageSearchRequest {
     public void setUserIds(Set<UUID> userIds) {
         this.userIds = userIds;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("GarageSearchRequest{");
+        sb.append("parkingGarageIds=").append(parkingGarageIds);
+        sb.append(", garageName='").append(garageName).append('\'');
+        sb.append(", addressLine1='").append(addressLine1).append('\'');
+        sb.append(", addressLine2='").append(addressLine2).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", state='").append(state).append('\'');
+        sb.append(", country='").append(country).append('\'');
+        sb.append(", pinCode='").append(pinCode).append('\'');
+        sb.append(", isOperational=").append(isOperational);
+        sb.append(", userIds=").append(userIds);
+        sb.append('}');
+        return sb.toString();
+    }
 }

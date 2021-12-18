@@ -8,15 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "user" , schema = "public")
+@NamedEntityGraph(name = "simpleUser", attributeNodes = {})
 public class User implements Serializable {
 
     @Id
@@ -41,6 +46,9 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user")
     private UserRole userRole;
 
+    @OneToMany(mappedBy = "user")
+    private List<Notification> notifications;
+
     public User() {
     }
 
@@ -54,7 +62,6 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @OneToOne(cascade= CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public ParkingGarage getParkingGarage() {
         return parkingGarage;

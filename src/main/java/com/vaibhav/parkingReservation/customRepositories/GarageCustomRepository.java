@@ -21,7 +21,7 @@ public class GarageCustomRepository {
 
 
     @Autowired
-    BasicCustomRepository basicCustomRepository;
+    RootCustomRepository rootCustomRepository;
 
 
     private String GARAGE_SELECT_QUERY = "Select distinct new com.vaibhav.parkingReservation.DTOs.ParkingGarageInfo " +
@@ -48,7 +48,7 @@ public class GarageCustomRepository {
         if (totalCount == 0) {
             return new GarageSearchResponse(new Page(pageSize, 0, 0), Collections.emptyList());
         }
-        List<ParkingGarageInfo> garageInfo = basicCustomRepository.getQueryResult(GARAGE_SELECT_QUERY + GARAGE_FROM_QUERY + whereQuery, parameters, pageNumber, pageSize, ParkingGarageInfo.class);
+        List<ParkingGarageInfo> garageInfo = rootCustomRepository.getQueryResult(GARAGE_SELECT_QUERY + GARAGE_FROM_QUERY + whereQuery, parameters, pageNumber, pageSize, ParkingGarageInfo.class);
         GarageSearchResponse garageSearchResponse = new GarageSearchResponse(new Page(pageSize, totalCount, pageNumber), garageInfo);
         return garageSearchResponse;
     }
@@ -57,7 +57,7 @@ public class GarageCustomRepository {
                                                   final String fromQuery) {
         StringBuilder sql = new StringBuilder(
                 whereQuery.length() + fromQuery.length() + distinctQuery.length() + 1);
-        Long queryCount = basicCustomRepository.getQueryCount(
+        Long queryCount = rootCustomRepository.getQueryCount(
                 sql.append(distinctQuery).append(fromQuery).append(whereQuery).toString(),
                 parameterMap);
         return queryCount.intValue();

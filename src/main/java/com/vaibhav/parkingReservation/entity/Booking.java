@@ -7,6 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -25,7 +27,10 @@ public class Booking extends BaseEntity implements Serializable {
     private UUID bookingId;
     private Timestamp startDate;
     private Timestamp endDate;
+
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+    @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
     @OneToOne(cascade = CascadeType.ALL)

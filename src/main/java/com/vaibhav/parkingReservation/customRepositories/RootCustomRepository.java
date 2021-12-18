@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class BasicCustomRepository {
+public class RootCustomRepository {
 
     private Integer ZERO = 0;
     @Autowired

@@ -36,6 +36,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static com.vaibhav.parkingReservation.constants.Constants.HYPHEN;
 
 @Service
@@ -61,6 +64,8 @@ public class SlotServiceImpl implements SlotService {
     @Autowired
     SlotMapper slotMapper;
 
+    Logger logger = LoggerFactory.getLogger(SlotServiceImpl.class);
+
     @Override
     public SlotSearchResponse searchSlotTypes(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
         return slotCustomRepository.getslots(slotSearchRequest, pageNumber, pageSize);
@@ -80,6 +85,7 @@ public class SlotServiceImpl implements SlotService {
                 saveSlotType(slotTypeDTO);
             } catch (Exception e) {
                 processedSlotTypes.put("Failed", slotTypeDTO.toString());
+
                 e.printStackTrace();
             }
         });

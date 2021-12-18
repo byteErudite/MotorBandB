@@ -1,5 +1,6 @@
 package com.vaibhav.parkingReservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -47,6 +48,7 @@ public class UserRole implements Serializable {
         this.userRoleId = userRoleId;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public User getUser() {
         return user;
     }
