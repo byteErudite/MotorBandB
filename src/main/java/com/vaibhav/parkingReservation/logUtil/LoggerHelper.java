@@ -10,17 +10,20 @@ import java.util.Objects;
 
 import static com.vaibhav.parkingReservation.constants.Constants.ERROR;
 import static com.vaibhav.parkingReservation.constants.Constants.INFO;
+import static com.vaibhav.parkingReservation.constants.Constants.DEBUG;
 
 @Component
 public class LoggerHelper {
     private static final Logger logger = LogManager.getLogger(LoggerHelper.class);
 
 
-    public void write(String logType, String header, String message,  Exception e, String errorMessage) {
+    public void write(String logType, String header, String message, Exception e, String errorMessage) {
         if (INFO.equals(logType)) {
-            logger.info(INFO + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message );
+            logger.info(INFO + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message);
         } else if (ERROR.equals(logType)) {
             logger.info(INFO + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : "") + errorMessage);
+        } else if (DEBUG.equals(logType)) {
+            logger.info(DEBUG + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : "") + errorMessage);
         }
     }
 }

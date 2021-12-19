@@ -13,6 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.UUID;
 
 @Component
 public class CorrelationInterceptor implements Filter {
@@ -22,10 +24,15 @@ public class CorrelationInterceptor implements Filter {
         if (req instanceof HttpServletRequest) {
 
             HttpServletRequest request = (HttpServletRequest) req;
-            String requestCid = request.getHeader("correlationId");
+            String correlationIdInRequest = request.getHeader("correlationId");
 
-            // add cid to the MDC
-            MDC.put("correlationId", requestCid);
+            if (Objects.nonNull(correlationIdInRequest)) {
+                CurrentThread.setCorrelationId(correlationIdInRequest);
+            } else {
+                CurrentThread.setCorrelationId(UUID.randomUUID().toString());
+            }
+
+            //MDC.put("correlationId", requestCid);
         }
 
         try {
@@ -34,7 +41,8 @@ public class CorrelationInterceptor implements Filter {
         } finally {
             // it's important to always clean the cid from the MDC,
             // this Thread goes to the pool but it's loglines would still contain the cid.
-            MDC.remove("CID");
+            CurrentThread.removeCorrelationId();
+            //MDC.remove("CID");
         }
 
     }

@@ -8,6 +8,7 @@ import com.vaibhav.parkingReservation.exceptions.ResourceCreationFailureExceptio
 import com.vaibhav.parkingReservation.exceptions.ResourceUpdateFailureException;
 import com.vaibhav.parkingReservation.logUtil.LoggerHelper;
 import com.vaibhav.parkingReservation.mapper.NotificationMapper;
+import com.vaibhav.parkingReservation.producers.NotificationProducer;
 import com.vaibhav.parkingReservation.repositories.NotificationRepository;
 import com.vaibhav.parkingReservation.repositories.UserRepository;
 import com.vaibhav.parkingReservation.requests.NotificationSearchRequest;
@@ -51,6 +52,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     LoggerHelper loggerHelper;
 
+    @Autowired
+    NotificationProducer notificationProducer;
+
     @Override
     public NotificationSearchResponse getNotifications(NotificationSearchRequest notificationSearchRequest, int page, int size, String sort) {
         try {
@@ -77,6 +81,7 @@ public class NotificationServiceImpl implements NotificationService {
                 }
                 Notification saveNotification = createNewNotification(notification, usersByuserId.get(notification.getUserId()));
                 //save notification or send to kafka producer
+                notificationProducer.sendActivityNotification(notification);
                 notificationRepository.save(saveNotification.forUser(usersByuserId.get(notification.getUserId())));
                 successCreation.add(notificationMapper.notificationToNotificationDTO(saveNotification));
             } catch (Exception e) {

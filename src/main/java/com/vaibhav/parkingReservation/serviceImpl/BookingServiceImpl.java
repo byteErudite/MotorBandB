@@ -1,6 +1,7 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.DTOs.BookingDTO;
+import com.vaibhav.parkingReservation.logUtil.LoggerHelper;
 import com.vaibhav.parkingReservation.requests.BookingRequest;
 import com.vaibhav.parkingReservation.constants.constantEntity.BookingStatus;
 import com.vaibhav.parkingReservation.constants.constantEntity.PaymentStatus;
@@ -28,6 +29,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.vaibhav.parkingReservation.constants.Errors.INVALID_SLOT;
+import static com.vaibhav.parkingReservation.constants.Errors.INVALID_SLOT_AVAILABILITY;
+import static com.vaibhav.parkingReservation.constants.Errors.INVALID_TIME_RANGE;
+import static com.vaibhav.parkingReservation.constants.Errors.INVALID_USER;
+
 @Service
 public class BookingServiceImpl implements BookingService {
     @Autowired
@@ -45,27 +51,30 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     BookingMapper bookingMapper;
 
+    @Autowired
+    LoggerHelper loggerHelper;
+
     @Override
     @Transactional
     public BookingDTO createBooking(BookingRequest bookingRequest) {
         Optional<Slot> slot = slotRepository.findById(UUID.fromString(bookingRequest.getSlotId()));
         if (!slot.isPresent()) {
-            throw new BadRequestException("Invalid slot, please try with a valid slot");
+            throw new BadRequestException(INVALID_SLOT);
         }
 
         Optional<User> user = userRepository.findById(UUID.fromString(bookingRequest.getUserId()));
         if (!user.isPresent()) {
-            throw new BadRequestException("Invalid userId, please try with a valid user");
+            throw new BadRequestException(INVALID_USER);
         }
         SlotAvailability slotAvailability = bookingRequest.getSlotAvailability();
         if (Objects.isNull(slotAvailability)) {
-            throw new BadRequestException("Slot availability is absent in request");
+            throw new BadRequestException(INVALID_SLOT_AVAILABILITY);
         }
         Date startDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getStartDateTime());
         Date endDateTime = CommonUtilities.getDateTimeFromString(bookingRequest.getEndDateTime());
 
         if (startDateTime.after(slotAvailability.getStartTime()) || endDateTime.before(slotAvailability.getEndTime())) {
-            throw new BadRequestException("Time range selected in not inside slot");
+            throw new BadRequestException(INVALID_TIME_RANGE);
         }
 
         splitSlotAvailability(slotAvailability, new Timestamp(startDateTime.getTime()), new Timestamp(endDateTime.getTime()));
