@@ -16,7 +16,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="com.java2novice" level="info" additivity="false">
+    <logger name="com.vaibhav" level="info" additivity="false">
         <appender-ref ref="FILE-AUDIT" />
     </logger>
 

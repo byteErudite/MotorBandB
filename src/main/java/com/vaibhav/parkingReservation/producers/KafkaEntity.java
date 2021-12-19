@@ -1,6 +1,9 @@
 package com.vaibhav.parkingReservation.producers;
 
-public class KafkaEntity {
+
+import java.io.Serializable;
+
+public class KafkaEntity implements Serializable {
 
     private String correlationId;
     private String header;
@@ -10,7 +13,7 @@ public class KafkaEntity {
     public KafkaEntity() {
     }
 
-    public KafkaEntity(String correlationId, String header, String description, Object payload) {
+    public KafkaEntity(String correlationId, String header, String description, String payload) {
         this.correlationId = correlationId;
         this.header = header;
         this.description = description;

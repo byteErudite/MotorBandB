@@ -21,7 +21,7 @@ public class LoggerHelper {
         if (INFO.equals(logType)) {
             logger.info(INFO + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message);
         } else if (ERROR.equals(logType)) {
-            logger.info(INFO + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : "") + errorMessage);
+            logger.info(ERROR + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : "") + errorMessage);
         } else if (DEBUG.equals(logType)) {
             logger.info(DEBUG + " ------  correlationId : " + MDC.get("correlationId") + " -----" + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : "") + errorMessage);
         }
