@@ -1,5 +1,7 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
+import com.vaibhav.parkingReservation.exceptions.ResourceCreationFailureException;
+import com.vaibhav.parkingReservation.exceptions.ResourceNotFoundException;
 import com.vaibhav.parkingReservation.requests.AuthenticationRequest;
 import com.vaibhav.parkingReservation.DTOs.UserDTO;
 import com.vaibhav.parkingReservation.constants.constantEntity.AssignedRole;
@@ -22,6 +24,10 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import static com.vaibhav.parkingReservation.constants.Constants.AND;
+import static com.vaibhav.parkingReservation.constants.Constants.EMAIL_ALREADY_IN_USE;
+import static com.vaibhav.parkingReservation.constants.Constants.USERNAME_ALREADY_IN_USE;
 
 
 @Service
@@ -75,18 +81,16 @@ public class UserServiceImpl implements UserService {
             }
             String duplicateException = null;
             if (usernameExists && emailExists) {
-                duplicateException = "email and username already in use";
+                duplicateException = EMAIL_ALREADY_IN_USE + AND + USERNAME_ALREADY_IN_USE;
             } else if (usernameExists) {
-                duplicateException = "username already in use";
+                duplicateException = USERNAME_ALREADY_IN_USE;
             } else if (emailExists) {
-                duplicateException = "email already in use";
+                duplicateException = EMAIL_ALREADY_IN_USE;
             }
-
             if (Objects.nonNull(duplicateException)) {
-                throw new Exception(duplicateException);
+                throw new ResourceCreationFailureException(duplicateException);
             }
         }
-
     }
 
     private User populateUserFromRegistrationRequest(AuthenticationRequest registrationRequest) throws Exception {
@@ -100,12 +104,12 @@ public class UserServiceImpl implements UserService {
     public UserDTO findCurrentUser() {
         SystemUserDetails systemUserDetails = (SystemUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (Objects.isNull(systemUserDetails)) {
-
+            throw new ResourceNotFoundException("Failed to find user details");
         }
         String username = systemUserDetails.getUsername();
         User user = userRepository.findByUsername(username);
         if (Objects.isNull(user)) {
-
+            throw new ResourceNotFoundException("Failed to find user details");
         }
         return userMapper.userToUserDTO(user);
     }

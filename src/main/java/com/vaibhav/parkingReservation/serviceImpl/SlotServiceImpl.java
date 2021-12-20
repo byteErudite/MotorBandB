@@ -1,6 +1,7 @@
 package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.DTOs.SlotDTO;
+import com.vaibhav.parkingReservation.logUtil.LoggerHelper;
 import com.vaibhav.parkingReservation.requests.SlotSearchRequest;
 import com.vaibhav.parkingReservation.DTOs.SlotTypeDTO;
 import com.vaibhav.parkingReservation.requests.SlotTypeSearchRequest;
@@ -36,6 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.vaibhav.parkingReservation.constants.Constants.ERROR;
 import static com.vaibhav.parkingReservation.constants.Constants.HYPHEN;
 
 @Service
@@ -61,6 +63,8 @@ public class SlotServiceImpl implements SlotService {
     @Autowired
     SlotMapper slotMapper;
 
+    LoggerHelper logger;
+
     @Override
     public SlotSearchResponse searchSlotTypes(SlotSearchRequest slotSearchRequest, int pageNumber, int pageSize) {
         return slotCustomRepository.getslots(slotSearchRequest, pageNumber, pageSize);
@@ -78,14 +82,12 @@ public class SlotServiceImpl implements SlotService {
         slotTypes.stream().forEach(slotTypeDTO -> {
             try {
                 saveSlotType(slotTypeDTO);
+                processedSlotTypes.put("success", slotTypeDTO.toString());
             } catch (Exception e) {
                 processedSlotTypes.put("Failed", slotTypeDTO.toString());
-                e.printStackTrace();
+                logger.write(ERROR, "SLOT TYPE CREATION FAILED : request -> {} : ", slotTypeDTO.toString(),e,e.getMessage());
             }
         });
-        if (CollectionUtils.isEmpty(processedSlotTypes)) {
-            processedSlotTypes.put("Success","all slot types");
-        }
         return processedSlotTypes;
     }
 
@@ -101,7 +103,7 @@ public class SlotServiceImpl implements SlotService {
                 saveSlot(slot);
             } catch (Exception e) {
                 processedSlots.put("Failed", slot.toString());
-                e.printStackTrace();
+                logger.write(ERROR, "SLOT CREATION FAILED : request -> {} : ", slot.toString(),e,e.getMessage());
             }
         });
         return processedSlots;
@@ -120,7 +122,6 @@ public class SlotServiceImpl implements SlotService {
     }
 
     private void setTimeAndCode(Slot slot, SlotDTO slotDTO) {
-
         String slotCode = UUID.randomUUID().toString().replace("-","") + HYPHEN + 0;
         slot.setSlotCode(slotCode);
         slotDTO.setSlotCode(slotDTO.getIdentifier1().substring(0,5) + slotDTO.getIdentifier2().substring(0,5) + slotDTO.getIdentifier3().substring(0,5));

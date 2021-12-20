@@ -51,7 +51,7 @@ public class ParkingServiceImpl implements ParkingService {
     GarageCustomRepository garageCustomRepository;
 
     @Autowired
-    LoggerHelper loggerHelper;
+    LoggerHelper logger;
 
     @Override
     @Transactional
@@ -66,13 +66,13 @@ public class ParkingServiceImpl implements ParkingService {
             return parkingGarageRepository.save(parkingGarage);
         } catch (Exception e) {
             System.out.println("Garage addition failed");
-            loggerHelper.write(ERROR, "GARAGE CREATION FAILED : request -> {} : ", parkingGarageDTO.toString(),e,e.getMessage());
+            logger.write(ERROR, "GARAGE CREATION FAILED : request -> {} : ", parkingGarageDTO.toString(),e,e.getMessage());
             throw new ResourceCreationFailureException("Garage addition failed, please try again");
         }
     }
 
     public GarageSearchResponse searchGarage(GarageSearchRequest garageSearchRequest, int pageNumber, int size) {
-        loggerHelper.write(INFO, "GARAGE SEARCH PERFORMED : request -> {} : ", garageSearchRequest.toString(),null,null);
+        logger.write(INFO, "GARAGE SEARCH PERFORMED : request -> {} : ", garageSearchRequest.toString(),null,null);
         return garageCustomRepository.searchGarage(garageSearchRequest, pageNumber, size);
     }
 
