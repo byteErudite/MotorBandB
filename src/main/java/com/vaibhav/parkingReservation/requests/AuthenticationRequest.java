@@ -19,7 +19,11 @@ public class AuthenticationRequest {
 
     @NotNull
     @NotEmpty
-    private String name;
+    private String firstname;
+
+    @NotNull
+    @NotEmpty
+    private String lastName;
 
     private String dateOfBirth;
 
@@ -53,12 +57,12 @@ public class AuthenticationRequest {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstname) {
+        this.firstname = firstname;
     }
 
     public String getDateOfBirth() {
@@ -69,13 +73,22 @@ public class AuthenticationRequest {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("AuthenticationRequest{");
         sb.append("username='").append(username).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append(", name='").append(name).append('\'');
+        sb.append(", firstname='").append(firstname).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", dateOfBirth='").append(dateOfBirth).append('\'');
         sb.append('}');
         return sb.toString();

@@ -13,5 +13,6 @@ public class Constants {
     public static final String EMAIL_ALREADY_IN_USE = "Email already in use";
     public static final String USERNAME_ALREADY_IN_USE = "Username already in use";
     public static final String AND = " and ";
-
+    public static final String CORRELATION_ID = " ------  correlationId : ";
+    public static final String DIVIDER = "   |   ";
 }

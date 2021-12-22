@@ -34,7 +34,8 @@ public class User implements Serializable {
     private boolean isActive;
     private Timestamp addedDate;
     private String email;
-    private String name;
+    private String firstName;
+    private String lastName;
     private Date dateOfBirth;
 
     @OneToOne(mappedBy = "user")
@@ -52,13 +53,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String password, boolean isActive, Timestamp addedDate, String email, String name, Date dateOfBirth) {
+    public User(String username, String password, boolean isActive, Timestamp addedDate, String email, String firstName,String lastName, Date dateOfBirth) {
         this.username = username;
         this.password = password;
         this.isActive = isActive;
         this.addedDate = addedDate;
         this.email = email;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -128,12 +130,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public Date getDateOfBirth() {
@@ -153,7 +155,8 @@ public class User implements Serializable {
         sb.append(", isActive=").append(isActive);
         sb.append(", addedDate=").append(addedDate);
         sb.append(", email='").append(email).append('\'');
-        sb.append(", name='").append(name).append('\'');
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", dateOfBirth=").append(dateOfBirth);
         sb.append(", parkingGarage=").append(parkingGarage);
         sb.append(", booking=").append(booking);

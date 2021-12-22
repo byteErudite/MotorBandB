@@ -7,6 +7,7 @@ import com.vaibhav.parkingReservation.entity.Address;
 import com.vaibhav.parkingReservation.entity.ParkingGarage;
 import com.vaibhav.parkingReservation.entity.User;
 import com.vaibhav.parkingReservation.exceptions.BadRequestException;
+import com.vaibhav.parkingReservation.exceptions.CustomException;
 import com.vaibhav.parkingReservation.exceptions.ResourceCreationFailureException;
 import com.vaibhav.parkingReservation.logUtil.LoggerHelper;
 import com.vaibhav.parkingReservation.mapper.AddressMapper;
@@ -20,6 +21,7 @@ import com.vaibhav.parkingReservation.security.SystemUserDetails;
 import com.vaibhav.parkingReservation.services.ParkingService;
 import com.vaibhav.parkingReservation.utilities.CommonUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +69,7 @@ public class ParkingServiceImpl implements ParkingService {
         } catch (Exception e) {
             System.out.println("Garage addition failed");
             logger.write(ERROR, "GARAGE CREATION FAILED : request -> {} : ", parkingGarageDTO.toString(),e,e.getMessage());
-            throw new ResourceCreationFailureException("Garage addition failed, please try again");
+            throw new CustomException("Garage addition failed, please try again", HttpStatus.EXPECTATION_FAILED);
         }
     }
 

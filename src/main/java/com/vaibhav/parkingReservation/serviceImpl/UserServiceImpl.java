@@ -2,6 +2,7 @@ package com.vaibhav.parkingReservation.serviceImpl;
 
 import com.vaibhav.parkingReservation.exceptions.ResourceCreationFailureException;
 import com.vaibhav.parkingReservation.exceptions.ResourceNotFoundException;
+import com.vaibhav.parkingReservation.logUtil.LoggerHelper;
 import com.vaibhav.parkingReservation.requests.AuthenticationRequest;
 import com.vaibhav.parkingReservation.DTOs.UserDTO;
 import com.vaibhav.parkingReservation.constants.constantEntity.AssignedRole;
@@ -27,6 +28,7 @@ import java.util.Objects;
 
 import static com.vaibhav.parkingReservation.constants.Constants.AND;
 import static com.vaibhav.parkingReservation.constants.Constants.EMAIL_ALREADY_IN_USE;
+import static com.vaibhav.parkingReservation.constants.Constants.ERROR;
 import static com.vaibhav.parkingReservation.constants.Constants.USERNAME_ALREADY_IN_USE;
 
 
@@ -45,6 +47,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
+    LoggerHelper logger;
+
     @Override
     @Transactional
     public String registerUser(AuthenticationRequest registrationRequest, AssignedRole role) throws Exception {
@@ -57,7 +61,11 @@ public class UserServiceImpl implements UserService {
             }
             userRoleRepository.save(new UserRole(user, dbRole));
             return "success";
-        } catch (Exception e) {
+        } catch (ResourceCreationFailureException e){
+            logger.write(ERROR, "USER CREATION FAILED : request -> {} : ", registrationRequest.toString(),e,e.getMessage());
+            throw e;
+        }catch (Exception e) {
+            logger.write(ERROR, "USER CREATION FAILED : request -> {} : ", registrationRequest.toString(),e,e.getMessage());
             throw new Exception("User creation failed please try again");
         }
     }
@@ -98,7 +106,7 @@ public class UserServiceImpl implements UserService {
         if (Objects.isNull(dateOfBirth)) {
             throw new Exception("Please provide date in dd/mm/yyyy format");
         }
-        return new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, new Timestamp(System.currentTimeMillis()), registrationRequest.getEmail(), registrationRequest.getName(), dateOfBirth);
+        return new User(registrationRequest.getUsername(), registrationRequest.getPassword(), true, new Timestamp(System.currentTimeMillis()), registrationRequest.getEmail(), registrationRequest.getFirstName(), registrationRequest.getLastName(), dateOfBirth);
     }
 
     public UserDTO findCurrentUser() {
