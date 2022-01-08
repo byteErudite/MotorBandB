@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  postgres-vaibhav:
+    image: 'postgres'
+    environment:
+      - POSTGRES_PASSWORD=singh
+    ports:
+      - "5433:5432"
+  springboot-parking-b-n-b-container:
+    image: motor_b_n_b
+    ports:
+      - "8085:8085"
+    build:
+      context: "./"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - postgres-vaibhav
