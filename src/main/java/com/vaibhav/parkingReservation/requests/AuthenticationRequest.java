@@ -33,6 +33,9 @@ public class AuthenticationRequest {
         this.email = email;
     }
 
+    public AuthenticationRequest() {
+    }
+
     public String getUsername() {
         return username;
     }

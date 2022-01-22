@@ -19,11 +19,11 @@ public class LoggerHelper {
     private static final Logger logger = LogManager.getLogger(LoggerHelper.class);
 
     public void write(String logType, String header, String message, Exception e, String errorMessage) {
-        if (INFO.equals(logType)) {
+        if (INFO.equals(logType) && logger.isInfoEnabled()) {
             logger.info(INFO + CORRELATION_ID + CurrentThread.correlationId() + DIVIDER + header + " -> " + message);
-        } else if (ERROR.equals(logType)) {
+        } else if (ERROR.equals(logType) && logger.isErrorEnabled()) {
             logger.info(ERROR + CORRELATION_ID + CurrentThread.correlationId() + DIVIDER + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : EMPTY_STRING) + errorMessage);
-        } else if (DEBUG.equals(logType)) {
+        } else if (DEBUG.equals(logType) && logger.isDebugEnabled()) {
             logger.info(DEBUG + CORRELATION_ID + CurrentThread.correlationId() + DIVIDER + header + " -> " + message + (Objects.nonNull(e) ? e.toString() : EMPTY_STRING) + errorMessage);
         }
     }
